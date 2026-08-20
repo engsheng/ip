@@ -1,6 +1,5 @@
-/**
- * Starts the Peter chatbot and prints its initial greeting.
- */
+import java.util.Scanner;
+
 public class Peter {
     public static void main(String[] args) {
         String divider = "____________________________________________________________";
@@ -15,7 +14,20 @@ public class Peter {
         System.out.println("Yo! I'm Peter.");
         System.out.println("What crazy adventures are we making today?");
         System.out.println(divider);
-        System.out.println("Bye! Hope to see you again.");
-        System.out.println(divider);
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            if (command.equals("bye")) {
+                System.out.println(divider);
+                System.out.println("Bye. Hope to see you again soon!");
+                System.out.println(divider);
+                break;
+            }
+
+            System.out.println(divider);
+            System.out.println(command);
+            System.out.println(divider);
+        }
     }
 }
