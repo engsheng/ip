@@ -28,9 +28,17 @@ public class Peter {
             } else if (command.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] "
+                    System.out.println((i + 1) + ".[" + tasks[i].getTaskTypeIcon() + "]["
+                            + tasks[i].getStatusIcon() + "] "
                             + tasks[i].getDescription());
                 }
+            } else if (command.startsWith("todo ")) {
+                String description = command.substring(5);
+                tasks[taskCount] = new Task(description, "T");
+                taskCount++;
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  [T][ ] " + description);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
             } else if (command.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(command.substring(5));
                 int taskIndex = taskNumber - 1;
@@ -44,7 +52,7 @@ public class Peter {
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.println("  [ ] " + tasks[taskIndex].getDescription());
             } else {
-                tasks[taskCount] = new Task(command);
+                tasks[taskCount] = new Task(command, "T");
                 taskCount++;
                 System.out.println("added: " + command);
             }
