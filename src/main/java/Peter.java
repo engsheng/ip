@@ -34,7 +34,7 @@ public class Peter {
                 }
             } else if (command.startsWith("todo ")) {
                 String description = command.substring(5);
-                tasks[taskCount] = new Task(description, "T");
+                tasks[taskCount] = new Todo(description);
                 taskCount++;
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  [T][ ] " + description);
@@ -43,7 +43,7 @@ public class Peter {
                 int byMarkerIndex = command.indexOf(" /by ");
                 String description = command.substring(9, byMarkerIndex);
                 String by = command.substring(byMarkerIndex + 5);
-                tasks[taskCount] = new Task(description, "D", by);
+                tasks[taskCount] = new Deadline(description, by);
                 taskCount++;
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  [D][ ] " + description + " (by: " + by + ")");
@@ -54,7 +54,7 @@ public class Peter {
                 String description = command.substring(6, fromMarkerIndex);
                 String from = command.substring(fromMarkerIndex + 7, toMarkerIndex);
                 String to = command.substring(toMarkerIndex + 5);
-                tasks[taskCount] = new Task(description, "E", from, to);
+                tasks[taskCount] = new Event(description, from, to);
                 taskCount++;
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  [E][ ] " + description + " (from: " + from + " to: " + to + ")");
@@ -72,7 +72,7 @@ public class Peter {
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.println("  [ ] " + tasks[taskIndex].getDescription());
             } else {
-                tasks[taskCount] = new Task(command, "T");
+                tasks[taskCount] = new Todo(command);
                 taskCount++;
                 System.out.println("added: " + command);
             }
