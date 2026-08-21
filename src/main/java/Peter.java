@@ -68,12 +68,36 @@ public class Peter {
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [D][ ] " + description + " (by: " + by + ")");
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
-                } else if (command.startsWith("event ")) {
+                } else if (command.equals("event") || command.startsWith("event ")) {
                     int fromMarkerIndex = command.indexOf(" /from ");
                     int toMarkerIndex = command.indexOf(" /to ");
+                    if (fromMarkerIndex == -1 || toMarkerIndex == -1 || fromMarkerIndex >= toMarkerIndex) {
+                        if (command.endsWith(" /from")) {
+                            throw new PeterException("Please include a start time after '/from'.");
+                        }
+                        if (command.endsWith(" /to")) {
+                            throw new PeterException("Please include an end time after '/to'.");
+                        }
+                        throw new PeterException("Use 'event <description> /from <start> /to <end>'.");
+                    }
+                    if (fromMarkerIndex <= 6) {
+                        throw new PeterException("Please include a description before '/from'.");
+                    }
+                    if (toMarkerIndex <= fromMarkerIndex + 7) {
+                        throw new PeterException("Please include a start time after '/from'.");
+                    }
                     String description = command.substring(6, fromMarkerIndex);
                     String from = command.substring(fromMarkerIndex + 7, toMarkerIndex);
                     String to = command.substring(toMarkerIndex + 5);
+                    if (description.isBlank()) {
+                        throw new PeterException("Please include a description before '/from'.");
+                    }
+                    if (from.isBlank()) {
+                        throw new PeterException("Please include a start time after '/from'.");
+                    }
+                    if (to.isBlank()) {
+                        throw new PeterException("Please include an end time after '/to'.");
+                    }
                     tasks[taskCount] = new Event(description, from, to);
                     taskCount++;
                     System.out.println("Got it. I've added this task:");

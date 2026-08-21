@@ -44,6 +44,63 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: reject malformed event commands
+
+**Aim:** Verify that an event command requires `/from` and `/to` in order,
+along with a description, start time, and end time.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+event meeting
+event /from noon /to 1pm
+event meeting /from /to 1pm
+event meeting /from noon /to
+event meeting /to 1pm /from noon
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Use 'event <description> /from <start> /to <end>'.
+____________________________________________________________
+____________________________________________________________
+Please include a description before '/from'.
+____________________________________________________________
+____________________________________________________________
+Please include a start time after '/from'.
+____________________________________________________________
+____________________________________________________________
+Please include an end time after '/to'.
+____________________________________________________________
+____________________________________________________________
+Use 'event <description> /from <start> /to <end>'.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: reject malformed deadline commands
 
 **Aim:** Verify that a deadline command requires the `/by` marker, a
