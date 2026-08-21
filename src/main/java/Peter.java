@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Peter {
@@ -16,8 +17,7 @@ public class Peter {
         System.out.println(divider);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(divider);
@@ -28,21 +28,21 @@ public class Peter {
                     break;
                 } else if (command.equals("list")) {
                     System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println((i + 1) + ".[" + tasks[i].getTaskTypeIcon() + "]["
-                                + tasks[i].getStatusIcon() + "] "
-                                + tasks[i].getDescription() + tasks[i].getScheduleDetails());
+                    for (int i = 0; i < tasks.size(); i++) {
+                        Task task = tasks.get(i);
+                        System.out.println((i + 1) + ".[" + task.getTaskTypeIcon() + "]["
+                                + task.getStatusIcon() + "] "
+                                + task.getDescription() + task.getScheduleDetails());
                     }
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.length() == 4 ? "" : command.substring(5);
                     if (description.isBlank()) {
                         throw new PeterException("Please include a description after 'todo'.");
                     }
-                    tasks[taskCount] = new Todo(description);
-                    taskCount++;
+                    tasks.add(new Todo(description));
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [T][ ] " + description);
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                     int byMarkerIndex = command.indexOf(" /by ");
                     if (byMarkerIndex == -1) {
@@ -63,11 +63,10 @@ public class Peter {
                     if (by.isBlank()) {
                         throw new PeterException("Please include a due date after '/by'.");
                     }
-                    tasks[taskCount] = new Deadline(description, by);
-                    taskCount++;
+                    tasks.add(new Deadline(description, by));
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [D][ ] " + description + " (by: " + by + ")");
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     int fromMarkerIndex = command.indexOf(" /from ");
                     int toMarkerIndex = command.indexOf(" /to ");
@@ -98,21 +97,20 @@ public class Peter {
                     if (to.isBlank()) {
                         throw new PeterException("Please include an end time after '/to'.");
                     }
-                    tasks[taskCount] = new Event(description, from, to);
-                    taskCount++;
+                    tasks.add(new Event(description, from, to));
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [E][ ] " + description + " (from: " + from + " to: " + to + ")");
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    int taskIndex = getTaskIndex(command, "mark", taskCount);
-                    tasks[taskIndex].markAsDone();
+                    int taskIndex = getTaskIndex(command, "mark", tasks.size());
+                    tasks.get(taskIndex).markAsDone();
                     System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("  [X] " + tasks[taskIndex].getDescription());
+                    System.out.println("  [X] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    int taskIndex = getTaskIndex(command, "unmark", taskCount);
-                    tasks[taskIndex].unmarkAsDone();
+                    int taskIndex = getTaskIndex(command, "unmark", tasks.size());
+                    tasks.get(taskIndex).unmarkAsDone();
                     System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println("  [ ] " + tasks[taskIndex].getDescription());
+                    System.out.println("  [ ] " + tasks.get(taskIndex).getDescription());
                 } else {
                     throw new PeterException("I'm sorry, but I don't understand that command. Please try again.");
                 }
