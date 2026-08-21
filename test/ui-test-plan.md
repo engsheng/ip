@@ -397,3 +397,126 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case: mark, unmark, and delete a task
+
+**Aim:** Verify that a task can be marked and unmarked, that `list` displays
+the updated status, and that deleting a completed task preserves its status.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+todo read book
+mark 1
+list
+unmark 1
+list
+mark 1
+delete 1
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [X] read book
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][X] read book
+____________________________________________________________
+____________________________________________________________
+OK, I've marked this task as not done yet:
+  [ ] read book
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [X] read book
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [T][X] read book
+Now you have 0 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: reject whitespace-only structured fields
+
+**Aim:** Verify that deadline and event fields containing only whitespace are
+rejected instead of being accepted as meaningful task details.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+deadline   /by tomorrow
+event   /from noon /to 1pm
+event meeting /from   /to 1pm
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Please include a description before '/by'.
+____________________________________________________________
+____________________________________________________________
+Please include a description before '/from'.
+____________________________________________________________
+____________________________________________________________
+Please include a start time after '/from'.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
