@@ -324,3 +324,76 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case: reject invalid delete task numbers
+
+**Aim:** Verify that `delete` rejects missing, non-integer, and out-of-range
+task numbers, handles an empty list, and continues accepting commands.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+delete
+delete 1
+todo read book
+delete first
+delete 0
+delete 2
+delete 1
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Please provide a task number to delete.
+____________________________________________________________
+____________________________________________________________
+There are no tasks to delete.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Please enter an integer task number to delete.
+____________________________________________________________
+____________________________________________________________
+Task number must be between 1 and 1.
+____________________________________________________________
+____________________________________________________________
+Task number must be between 1 and 1.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [T][ ] read book
+Now you have 0 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
