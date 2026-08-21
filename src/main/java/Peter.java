@@ -43,10 +43,26 @@ public class Peter {
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [T][ ] " + description);
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
-                } else if (command.startsWith("deadline ")) {
+                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                     int byMarkerIndex = command.indexOf(" /by ");
+                    if (byMarkerIndex == -1) {
+                        if (command.endsWith(" /by")) {
+                            throw new PeterException("Please include a due date after '/by'.");
+                        }
+                        throw new PeterException("Use 'deadline <description> /by <date>'.");
+                    }
+                    if (byMarkerIndex <= 9) {
+                        throw new PeterException("Please include a description before '/by'.");
+                    }
                     String description = command.substring(9, byMarkerIndex);
                     String by = command.substring(byMarkerIndex + 5);
+                    // To handle cases where the user enters blank description or blank due date
+                    if (description.isBlank()) {
+                        throw new PeterException("Please include a description before '/by'.");
+                    }
+                    if (by.isBlank()) {
+                        throw new PeterException("Please include a due date after '/by'.");
+                    }
                     tasks[taskCount] = new Deadline(description, by);
                     taskCount++;
                     System.out.println("Got it. I've added this task:");
