@@ -103,15 +103,13 @@ public class Peter {
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [E][ ] " + description + " (from: " + from + " to: " + to + ")");
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
-                } else if (command.startsWith("mark ")) {
-                    int taskNumber = Integer.parseInt(command.substring(5));
-                    int taskIndex = taskNumber - 1;
+                } else if (command.equals("mark") || command.startsWith("mark ")) {
+                    int taskIndex = getTaskIndex(command, "mark", taskCount);
                     tasks[taskIndex].markAsDone();
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  [X] " + tasks[taskIndex].getDescription());
-                } else if (command.startsWith("unmark ")) {
-                    int taskNumber = Integer.parseInt(command.substring(7));
-                    int taskIndex = taskNumber - 1;
+                } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+                    int taskIndex = getTaskIndex(command, "unmark", taskCount);
                     tasks[taskIndex].unmarkAsDone();
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  [ ] " + tasks[taskIndex].getDescription());
@@ -122,6 +120,26 @@ public class Peter {
                 System.out.println(e.getMessage());
             }
             System.out.println(divider);
+        }
+    }
+
+    private static int getTaskIndex(String command, String action, int taskCount) throws PeterException {
+        String taskNumberText = command.substring(action.length()).trim();
+        if (taskNumberText.isEmpty()) {
+            throw new PeterException("Please provide a task number to " + action + ".");
+        }
+        if (taskCount == 0) {
+            throw new PeterException("There are no tasks to " + action + ".");
+        }
+
+        try {
+            int taskNumber = Integer.parseInt(taskNumberText);
+            if (taskNumber < 1 || taskNumber > taskCount) {
+                throw new PeterException("Task number must be between 1 and " + taskCount + ".");
+            }
+            return taskNumber - 1;
+        } catch (NumberFormatException e) {
+            throw new PeterException("Please enter an integer task number to " + action + ".");
         }
     }
 }

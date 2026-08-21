@@ -44,6 +44,73 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: reject invalid mark and unmark task numbers
+
+**Aim:** Verify that `mark` and `unmark` reject missing, non-numeric, and
+out-of-range task numbers without ending the program.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+mark
+unmark 1
+todo read
+mark first
+unmark nope
+mark 2
+unmark 0
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Please provide a task number to mark.
+____________________________________________________________
+____________________________________________________________
+There are no tasks to unmark.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Please enter a whole-number task number to mark.
+____________________________________________________________
+____________________________________________________________
+Please enter a whole-number task number to unmark.
+____________________________________________________________
+____________________________________________________________
+Task number must be between 1 and 1.
+____________________________________________________________
+____________________________________________________________
+Task number must be between 1 and 1.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: reject malformed event commands
 
 **Aim:** Verify that an event command requires `/from` and `/to` in order,
