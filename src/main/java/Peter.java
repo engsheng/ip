@@ -111,6 +111,14 @@ public class Peter {
                     tasks.get(taskIndex).unmarkAsDone();
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  [ ] " + tasks.get(taskIndex).getDescription());
+                } else if (command.startsWith("delete ")) {
+                    int taskIndex = Integer.parseInt(command.substring(7)) - 1;
+                    Task removedTask = tasks.remove(taskIndex);
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println("  [" + removedTask.getTaskTypeIcon() + "]["
+                            + removedTask.getStatusIcon() + "] " + removedTask.getDescription()
+                            + removedTask.getScheduleDetails());
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else {
                     throw new PeterException("I'm sorry, but I don't understand that command. Please try again.");
                 }

@@ -95,10 +95,10 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Please enter a whole-number task number to mark.
+Please enter an integer task number to mark.
 ____________________________________________________________
 ____________________________________________________________
-Please enter a whole-number task number to unmark.
+Please enter an integer task number to unmark.
 ____________________________________________________________
 ____________________________________________________________
 Task number must be between 1 and 1.
@@ -252,6 +252,73 @@ What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
 I'm sorry, but I don't understand that command. Please try again.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: delete a task from the list
+
+**Aim:** Verify that `delete` removes the selected task, displays its full
+details, updates the task count, and renumbers the remaining tasks.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+todo read book
+event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by June 6th
+delete 2
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: June 6th)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: June 6th)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
