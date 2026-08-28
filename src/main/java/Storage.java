@@ -12,10 +12,17 @@ import java.util.List;
  * Loads and saves the task list using the application's data file.
  */
 public final class Storage {
-    private static final Path DATA_FILE = Path.of("data", "peter.txt");
-    private static final Path TEMP_DATA_FILE = Path.of("data", "peter.txt.tmp");
+    private final Path dataFile;
+    private final Path temporaryDataFile;
 
-    private Storage() {
+    /**
+     * Creates storage backed by the file at the given path.
+     *
+     * @param filePath path to the task data file
+     */
+    public Storage(String filePath) {
+        this.dataFile = Path.of(filePath);
+        this.temporaryDataFile = dataFile.resolveSibling(dataFile.getFileName() + ".tmp");
     }
 
     /**
@@ -25,14 +32,14 @@ public final class Storage {
      * @return tasks stored in the data file
      * @throws PeterException if the file cannot be read or contains invalid data
      */
-    public static ArrayList<Task> load() throws PeterException {
+    public ArrayList<Task> load() throws PeterException {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (!Files.exists(DATA_FILE)) {
+        if (!Files.exists(dataFile)) {
             return tasks;
         }
 
         try {
-            List<String> taskLines = Files.readAllLines(DATA_FILE, StandardCharsets.UTF_8);
+            List<String> taskLines = Files.readAllLines(dataFile, StandardCharsets.UTF_8);
             for (int i = 0; i < taskLines.size(); i++) {
                 String taskLine = taskLines.get(i);
                 if (i == 0 && taskLine.startsWith("\uFEFF")) {
@@ -101,17 +108,20 @@ public final class Storage {
      * @param tasks tasks to save in their current order
      * @throws PeterException if the data directory or file cannot be written
      */
-    public static void save(List<Task> tasks) throws PeterException {
+    public void save(List<Task> tasks) throws PeterException {
         try {
-            Files.createDirectories(DATA_FILE.getParent());
+            Path dataDirectory = dataFile.getParent();
+            if (dataDirectory != null) {
+                Files.createDirectories(dataDirectory);
+            }
             List<String> taskLines = tasks.stream()
                     .map(Task::toDataString)
                     .toList();
-            Files.write(TEMP_DATA_FILE, taskLines, StandardCharsets.UTF_8);
+            Files.write(temporaryDataFile, taskLines, StandardCharsets.UTF_8);
             moveTemporaryFileIntoPlace();
         } catch (IOException | SecurityException e) {
             try {
-                Files.deleteIfExists(TEMP_DATA_FILE);
+                Files.deleteIfExists(temporaryDataFile);
             } catch (IOException | SecurityException ignored) {
                 // Keep the original save error, which is more useful to the user.
             }
@@ -123,12 +133,12 @@ public final class Storage {
     /**
      * Replaces the data file atomically when supported by the file system.
      */
-    private static void moveTemporaryFileIntoPlace() throws IOException {
+    private void moveTemporaryFileIntoPlace() throws IOException {
         try {
-            Files.move(TEMP_DATA_FILE, DATA_FILE,
+            Files.move(temporaryDataFile, dataFile,
                     StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         } catch (AtomicMoveNotSupportedException e) {
-            Files.move(TEMP_DATA_FILE, DATA_FILE, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(temporaryDataFile, dataFile, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 }

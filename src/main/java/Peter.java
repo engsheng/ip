@@ -3,19 +3,49 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/**
+ * Coordinates the task list, storage, and console UI for the chatbot.
+ */
 public class Peter {
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        ui.showWelcome();
+    private final Storage storage;
+    private final Ui ui;
+    private final ArrayList<Task> tasks;
 
-        ArrayList<Task> tasks;
+    /** Loading failure retained so it can be displayed after the welcome message. */
+    private final PeterException loadingError;
+
+    /**
+     * Creates the chatbot and loads tasks from the given data file.
+     *
+     * @param filePath path to the task data file
+     */
+    public Peter(String filePath) {
+        this.storage = new Storage(filePath);
+        this.ui = new Ui();
+
+        ArrayList<Task> loadedTasks;
+        PeterException loadError = null;
         try {
-            tasks = Storage.load();
+            loadedTasks = storage.load();
         } catch (PeterException e) {
-            ui.showError(e.getMessage());
+            loadedTasks = new ArrayList<>();
+            loadError = e;
+        }
+        this.tasks = loadedTasks;
+        this.loadingError = loadError;
+    }
+
+    /**
+     * Starts the console interaction loop.
+     */
+    public void run() {
+        ui.showWelcome();
+        if (loadingError != null) {
+            ui.showError(loadingError.getMessage());
             ui.showDivider();
             return;
         }
+
         while (ui.hasNextCommand()) {
             String command = ui.readCommand();
             ui.showDivider();
@@ -141,6 +171,10 @@ public class Peter {
         }
     }
 
+    public static void main(String[] args) {
+        new Peter("data/peter.txt").run();
+    }
+
     /**
      * Rejects the delimiter used to separate fields in the data file.
      */
@@ -204,10 +238,10 @@ public class Peter {
     /**
      * Adds and saves a task, undoing the addition if saving fails.
      */
-    private static void addTask(ArrayList<Task> tasks, Task task) throws PeterException {
+    private void addTask(ArrayList<Task> tasks, Task task) throws PeterException {
         tasks.add(task);
         try {
-            Storage.save(tasks);
+            storage.save(tasks);
         } catch (PeterException e) {
             tasks.remove(tasks.size() - 1);
             throw e;
@@ -217,7 +251,7 @@ public class Peter {
     /**
      * Changes and saves a task status, restoring the old status if saving fails.
      */
-    private static void changeTaskStatus(ArrayList<Task> tasks, int taskIndex, boolean isDone)
+    private void changeTaskStatus(ArrayList<Task> tasks, int taskIndex, boolean isDone)
             throws PeterException {
         Task task = tasks.get(taskIndex);
         boolean previousStatus = task.isDone();
@@ -227,7 +261,7 @@ public class Peter {
             task.unmarkAsDone();
         }
         try {
-            Storage.save(tasks);
+            storage.save(tasks);
         } catch (PeterException e) {
             if (previousStatus) {
                 task.markAsDone();
@@ -241,10 +275,10 @@ public class Peter {
     /**
      * Deletes and saves a task, restoring it at the same position if saving fails.
      */
-    private static Task deleteTask(ArrayList<Task> tasks, int taskIndex) throws PeterException {
+    private Task deleteTask(ArrayList<Task> tasks, int taskIndex) throws PeterException {
         Task removedTask = tasks.remove(taskIndex);
         try {
-            Storage.save(tasks);
+            storage.save(tasks);
             return removedTask;
         } catch (PeterException e) {
             tasks.add(taskIndex, removedTask);
