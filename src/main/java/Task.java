@@ -1,3 +1,8 @@
+import java.time.LocalDate;
+
+/**
+ * Represents a task tracked by Peter.
+ */
 public abstract class Task {
     protected String description;
     protected boolean isDone;
@@ -33,6 +38,17 @@ public abstract class Task {
      * @return the serialized task
      */
     public abstract String toDataString();
+
+    /**
+     * Checks whether this task is scheduled on a given date. Tasks without a
+     * schedule return {@code false}; scheduled task types override this method.
+     *
+     * @param date date to check
+     * @return whether the task occurs on the date
+     */
+    public boolean occursOn(LocalDate date) {
+        return false;
+    }
 
     public void markAsDone() {
         isDone = true;

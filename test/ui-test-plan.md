@@ -64,8 +64,8 @@ New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
 $uiTestDataFile = Join-Path $uiTestDataDirectory 'peter.txt'
 $uiTestData = @(
     'T | 1 | read book',
-    'D | 0 | return book | June 6th',
-    'E | 1 | project meeting | Aug 6th 2pm | 4pm'
+    'D | 0 | return book | 2019-06-06T18:00',
+    'E | 1 | project meeting | 2019-08-06 | 2019-08-07'
 )
 $utf8WithBom = New-Object System.Text.UTF8Encoding($true)
 [System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithBom)
@@ -95,8 +95,8 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][ ] return book (by: June 6th)
-3.[E][X] project meeting (from: Aug 6th 2pm to: 4pm)
+2.[D][ ] return book (by: Jun 6 2019, 6:00 PM)
+3.[E][X] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -146,10 +146,10 @@ Yo! I'm Peter.
 What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
-Please provide a task number to mark.
+Oh dear! Please provide a task number to mark.
 ____________________________________________________________
 ____________________________________________________________
-There are no tasks to unmark.
+Oh dear! There are no tasks to unmark.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -157,16 +157,16 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Please enter an integer task number to mark.
+Oh dear! Please enter an integer task number to mark.
 ____________________________________________________________
 ____________________________________________________________
-Please enter an integer task number to unmark.
+Oh dear! Please enter an integer task number to unmark.
 ____________________________________________________________
 ____________________________________________________________
-Task number must be between 1 and 1.
+Oh dear! Task number must be between 1 and 1.
 ____________________________________________________________
 ____________________________________________________________
-Task number must be between 1 and 1.
+Oh dear! Task number must be between 1 and 1.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -176,7 +176,7 @@ ____________________________________________________________
 ## Test case: reject malformed event commands
 
 **Aim:** Verify that an event command requires `/from` and `/to` in order,
-along with a description, start time, and end time.
+along with a description, start date, and end date.
 
 **Command:**
 
@@ -214,19 +214,19 @@ Yo! I'm Peter.
 What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
-Use 'event <description> /from <start> /to <end>'.
+Use 'event <description> /from <start-date> /to <end-date>'.
 ____________________________________________________________
 ____________________________________________________________
 Please include a description before '/from'.
 ____________________________________________________________
 ____________________________________________________________
-Please include a start time after '/from'.
+Please include a start date after '/from'.
 ____________________________________________________________
 ____________________________________________________________
-Please include an end time after '/to'.
+Please include an end date after '/to'.
 ____________________________________________________________
 ____________________________________________________________
-Use 'event <description> /from <start> /to <end>'.
+Use 'event <description> /from <start-date> /to <end-date>'.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -279,6 +279,147 @@ Please include a description before '/by'.
 ____________________________________________________________
 ____________________________________________________________
 Please include a due date after '/by'.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: parse and format schedule dates and times
+
+**Aim:** Verify that schedules accept `yyyy-MM-dd` dates and `d/M/yyyy HHmm`
+date-times, display them clearly, and reject malformed or impossible values.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+deadline return book /by 2019-02-29
+event holiday /from 2019-12-01 /to tomorrow
+deadline return book /by 2/12/2019 1800
+event holiday /from 1/12/2019 0900 /to 2/12/2019 1730
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Please enter the due date as yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).
+____________________________________________________________
+____________________________________________________________
+Please enter the end date as yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Dec 2 2019, 6:00 PM)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] holiday (from: Dec 1 2019, 9:00 AM to: Dec 2 2019, 5:30 PM)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+2.[E][ ] holiday (from: Dec 1 2019, 9:00 AM to: Dec 2 2019, 5:30 PM)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: find scheduled tasks on a date
+
+**Aim:** Verify that `on` finds deadlines and events occurring on an ISO date,
+uses original task numbers, includes event date ranges, and handles invalid or
+unmatched dates.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+$uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
+New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
+$uiTestDataFile = Join-Path $uiTestDataDirectory 'peter.txt'
+$uiTestData = @(
+    'T | 0 | read book',
+    'D | 0 | return book | 2019-12-02T18:00',
+    'E | 1 | holiday | 2019-12-01T09:00 | 2019-12-03T17:30',
+    'E | 0 | meeting | 2019-12-03T09:00 | 2019-12-03T10:00'
+)
+$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+on
+on tomorrow
+on 2019-12-02
+on 2019-12-03
+on 2019-12-04
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Use 'on <date>' (e.g., on 2019-12-02).
+____________________________________________________________
+____________________________________________________________
+Please enter the date in yyyy-MM-dd format (e.g., 2019-12-02).
+____________________________________________________________
+____________________________________________________________
+Here are the scheduled tasks on Dec 2 2019:
+2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+3.[E][X] holiday (from: Dec 1 2019, 9:00 AM to: Dec 3 2019, 5:30 PM)
+____________________________________________________________
+____________________________________________________________
+Here are the scheduled tasks on Dec 3 2019:
+3.[E][X] holiday (from: Dec 1 2019, 9:00 AM to: Dec 3 2019, 5:30 PM)
+4.[E][ ] meeting (from: Dec 3 2019, 9:00 AM to: Dec 3 2019, 10:00 AM)
+____________________________________________________________
+____________________________________________________________
+There are no scheduled tasks on Dec 4 2019.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -350,8 +491,8 @@ java -cp $uiTestBuildDirectory Peter
 
 ```text
 todo read book
-event project meeting /from Aug 6th 2pm /to 4pm
-deadline return book /by June 6th
+event project meeting /from 2019-08-06 /to 2019-08-07
+deadline return book /by 2019-06-06
 delete 2
 list
 bye
@@ -376,23 +517,23 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 6 2019)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: June 6th)
+2.[D][ ] return book (by: Jun 6 2019)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -443,10 +584,10 @@ Yo! I'm Peter.
 What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
-Please provide a task number to delete.
+Oh dear! Please provide a task number to delete.
 ____________________________________________________________
 ____________________________________________________________
-There are no tasks to delete.
+Oh dear! There are no tasks to delete.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -454,13 +595,13 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Please enter an integer task number to delete.
+Oh dear! Please enter an integer task number to delete.
 ____________________________________________________________
 ____________________________________________________________
-Task number must be between 1 and 1.
+Oh dear! Task number must be between 1 and 1.
 ____________________________________________________________
 ____________________________________________________________
-Task number must be between 1 and 1.
+Oh dear! Task number must be between 1 and 1.
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
@@ -597,7 +738,7 @@ ____________________________________________________________
 Please include a description before '/from'.
 ____________________________________________________________
 ____________________________________________________________
-Please include a start time after '/from'.
+Please include a start date after '/from'.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -625,8 +766,8 @@ java -cp $uiTestBuildDirectory Peter
 
 ```text
 todo read book
-deadline return book /by June 6th
-event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by 2019-06-06
+event project meeting /from 2019-08-06 /to 2019-08-07
 mark 1
 delete 2
 bye
@@ -651,12 +792,12 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 6 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -665,7 +806,7 @@ Nice! I've marked this task as done:
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 6 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -844,13 +985,13 @@ Yo! I'm Peter.
 What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
-Task details cannot contain ' | '.
+Oh dear!Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
-Task details cannot contain ' | '.
+Oh dear!Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
-Task details cannot contain ' | '.
+Oh dear!Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
