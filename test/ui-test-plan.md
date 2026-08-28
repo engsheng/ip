@@ -351,6 +351,81 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: find scheduled tasks on a date
+
+**Aim:** Verify that `on` finds deadlines and events occurring on an ISO date,
+uses original task numbers, includes event date ranges, and handles invalid or
+unmatched dates.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+$uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
+New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
+$uiTestDataFile = Join-Path $uiTestDataDirectory 'peter.txt'
+$uiTestData = @(
+    'T | 0 | read book',
+    'D | 0 | return book | 2019-12-02T18:00',
+    'E | 1 | holiday | 2019-12-01T09:00 | 2019-12-03T17:30',
+    'E | 0 | meeting | 2019-12-03T09:00 | 2019-12-03T10:00'
+)
+$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+on
+on tomorrow
+on 2019-12-02
+on 2019-12-03
+on 2019-12-04
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Use 'on <date>' (e.g., on 2019-12-02).
+____________________________________________________________
+____________________________________________________________
+Please enter the date in yyyy-MM-dd format (e.g., 2019-12-02).
+____________________________________________________________
+____________________________________________________________
+Here are the scheduled tasks on Dec 2 2019:
+2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+3.[E][X] holiday (from: Dec 1 2019, 9:00 AM to: Dec 3 2019, 5:30 PM)
+____________________________________________________________
+____________________________________________________________
+Here are the scheduled tasks on Dec 3 2019:
+3.[E][X] holiday (from: Dec 1 2019, 9:00 AM to: Dec 3 2019, 5:30 PM)
+4.[E][ ] meeting (from: Dec 3 2019, 9:00 AM to: Dec 3 2019, 10:00 AM)
+____________________________________________________________
+____________________________________________________________
+There are no scheduled tasks on Dec 4 2019.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: reject an unknown command
 
 **Aim:** Verify that an unknown command displays a helpful error and is not

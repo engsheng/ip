@@ -65,4 +65,14 @@ public final class ScheduleDateTime {
         }
         return value.format(DISPLAY_DATE_TIME_FORMAT);
     }
+
+    /**
+     * Formats a date without adding a time.
+     *
+     * @param value date to display
+     * @return a friendly date such as {@code Oct 15 2019}
+     */
+    public static String format(LocalDate value) {
+        return value.format(DISPLAY_DATE_FORMAT);
+    }
 }

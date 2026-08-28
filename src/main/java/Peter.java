@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -43,6 +44,13 @@ public class Peter {
                                 + task.getStatusIcon() + "] "
                                 + task.getDescription() + task.getScheduleDetails());
                     }
+                } else if (command.equals("on") || command.startsWith("on ")) {
+                    String dateText = command.substring(2).trim();
+                    if (dateText.isEmpty()) {
+                        throw new PeterException("Use 'on <date>' (e.g., on 2019-12-02).");
+                    }
+                    LocalDate date = parseQueryDate(dateText);
+                    printTasksOnDate(tasks, date);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.length() == 4 ? "" : command.substring(5);
                     if (description.isBlank()) {
@@ -165,6 +173,43 @@ public class Peter {
         } catch (DateTimeParseException e) {
             throw new PeterException("Please enter the " + dateName + " date as yyyy-MM-dd"
                     + " or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).", e);
+        }
+    }
+
+    /**
+     * Parses the ISO date used by the {@code on} command.
+     */
+    private static LocalDate parseQueryDate(String dateText) throws PeterException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException e) {
+            throw new PeterException(
+                    "Please enter the date in yyyy-MM-dd format (e.g., 2019-12-02).", e);
+        }
+    }
+
+    /**
+     * Prints scheduled tasks occurring on a date, using their original task
+     * numbers so subsequent task commands can refer to them directly.
+     */
+    private static void printTasksOnDate(ArrayList<Task> tasks, LocalDate date) {
+        boolean foundTask = false;
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task.occursOn(date)) {
+                if (!foundTask) {
+                    System.out.println("Here are the scheduled tasks on "
+                            + ScheduleDateTime.format(date) + ":");
+                }
+                System.out.println((i + 1) + ".[" + task.getTaskTypeIcon() + "]["
+                        + task.getStatusIcon() + "] " + task.getDescription()
+                        + task.getScheduleDetails());
+                foundTask = true;
+            }
+        }
+        if (!foundTask) {
+            System.out.println("There are no scheduled tasks on "
+                    + ScheduleDateTime.format(date) + ".");
         }
     }
 
