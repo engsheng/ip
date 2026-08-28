@@ -10,4 +10,9 @@ public class Deadline extends Task {
     public String getScheduleDetails() {
         return " (by: " + by + ")";
     }
+
+    @Override
+    public String toDataString() {
+        return "D | " + (isDone ? 1 : 0) + " | " + description + " | " + by;
+    }
 }

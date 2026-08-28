@@ -12,4 +12,9 @@ public class Event extends Task {
     public String getScheduleDetails() {
         return " (from: " + from + " to: " + to + ")";
     }
+
+    @Override
+    public String toDataString() {
+        return "E | " + (isDone ? 1 : 0) + " | " + description + " | " + from + " | " + to;
+    }
 }

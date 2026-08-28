@@ -21,7 +21,18 @@ public abstract class Task {
         return description;
     }
 
+    public boolean isDone() {
+        return isDone;
+    }
+
     public abstract String getScheduleDetails();
+
+    /**
+     * Converts this task into the line format used in the data file.
+     *
+     * @return the serialized task
+     */
+    public abstract String toDataString();
 
     public void markAsDone() {
         isDone = true;

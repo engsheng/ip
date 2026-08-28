@@ -17,7 +17,14 @@ public class Peter {
         System.out.println(divider);
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks;
+        try {
+            tasks = Storage.load();
+        } catch (PeterException e) {
+            System.out.println(e.getMessage());
+            System.out.println(divider);
+            return;
+        }
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(divider);
@@ -39,7 +46,8 @@ public class Peter {
                     if (description.isBlank()) {
                         throw new PeterException("Please include a description after 'todo'.");
                     }
-                    tasks.add(new Todo(description));
+                    validateStorageFields(description);
+                    addTask(tasks, new Todo(description));
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [T][ ] " + description);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -63,7 +71,8 @@ public class Peter {
                     if (by.isBlank()) {
                         throw new PeterException("Please include a due date after '/by'.");
                     }
-                    tasks.add(new Deadline(description, by));
+                    validateStorageFields(description, by);
+                    addTask(tasks, new Deadline(description, by));
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [D][ ] " + description + " (by: " + by + ")");
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -97,23 +106,24 @@ public class Peter {
                     if (to.isBlank()) {
                         throw new PeterException("Please include an end time after '/to'.");
                     }
-                    tasks.add(new Event(description, from, to));
+                    validateStorageFields(description, from, to);
+                    addTask(tasks, new Event(description, from, to));
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [E][ ] " + description + " (from: " + from + " to: " + to + ")");
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskIndex = getTaskIndex(command, "mark", tasks.size());
-                    tasks.get(taskIndex).markAsDone();
+                    changeTaskStatus(tasks, taskIndex, true);
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  [X] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     int taskIndex = getTaskIndex(command, "unmark", tasks.size());
-                    tasks.get(taskIndex).unmarkAsDone();
+                    changeTaskStatus(tasks, taskIndex, false);
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  [ ] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     int taskIndex = getTaskIndex(command, "delete", tasks.size());
-                    Task removedTask = tasks.remove(taskIndex);
+                    Task removedTask = deleteTask(tasks, taskIndex);
                     System.out.println("Noted. I've removed this task:");
                     System.out.println("  [" + removedTask.getTaskTypeIcon() + "]["
                             + removedTask.getStatusIcon() + "] " + removedTask.getDescription()
@@ -129,23 +139,85 @@ public class Peter {
         }
     }
 
+    /**
+     * Rejects the delimiter used to separate fields in the data file.
+     */
+    private static void validateStorageFields(String... fields) throws PeterException {
+        for (String field : fields) {
+            if (field.contains(" | ")) {
+                throw new PeterException("Oh dear!Task details cannot contain ' | '.");
+            }
+        }
+    }
+
+    /**
+     * Adds and saves a task, undoing the addition if saving fails.
+     */
+    private static void addTask(ArrayList<Task> tasks, Task task) throws PeterException {
+        tasks.add(task);
+        try {
+            Storage.save(tasks);
+        } catch (PeterException e) {
+            tasks.remove(tasks.size() - 1);
+            throw e;
+        }
+    }
+
+    /**
+     * Changes and saves a task status, restoring the old status if saving fails.
+     */
+    private static void changeTaskStatus(ArrayList<Task> tasks, int taskIndex, boolean isDone)
+            throws PeterException {
+        Task task = tasks.get(taskIndex);
+        boolean previousStatus = task.isDone();
+        if (isDone) {
+            task.markAsDone();
+        } else {
+            task.unmarkAsDone();
+        }
+        try {
+            Storage.save(tasks);
+        } catch (PeterException e) {
+            if (previousStatus) {
+                task.markAsDone();
+            } else {
+                task.unmarkAsDone();
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * Deletes and saves a task, restoring it at the same position if saving fails.
+     */
+    private static Task deleteTask(ArrayList<Task> tasks, int taskIndex) throws PeterException {
+        Task removedTask = tasks.remove(taskIndex);
+        try {
+            Storage.save(tasks);
+            return removedTask;
+        } catch (PeterException e) {
+            tasks.add(taskIndex, removedTask);
+            throw e;
+        }
+    }
+
     private static int getTaskIndex(String command, String action, int taskCount) throws PeterException {
         String taskNumberText = command.substring(action.length()).trim();
         if (taskNumberText.isEmpty()) {
-            throw new PeterException("Please provide a task number to " + action + ".");
+            throw new PeterException("Oh dear! Please provide a task number to " + action + ".");
         }
         if (taskCount == 0) {
-            throw new PeterException("There are no tasks to " + action + ".");
+            throw new PeterException("Oh dear! There are no tasks to " + action + ".");
         }
 
         try {
             int taskNumber = Integer.parseInt(taskNumberText);
             if (taskNumber < 1 || taskNumber > taskCount) {
-                throw new PeterException("Task number must be between 1 and " + taskCount + ".");
+                throw new PeterException("Oh dear! Task number must be between 1 and " + taskCount + ".");
             }
             return taskNumber - 1;
         } catch (NumberFormatException e) {
-            throw new PeterException("Please enter an integer task number to " + action + ".");
+            throw new PeterException("Oh dear! Please enter an integer task number to " + action + ".");
         }
     }
 }
