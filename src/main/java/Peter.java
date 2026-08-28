@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -159,12 +159,12 @@ public class Peter {
     /**
      * Parses a user-entered date in the application's ISO date format.
      */
-    private static LocalDate parseDate(String dateText, String dateName) throws PeterException {
+    private static LocalDateTime parseDate(String dateText, String dateName) throws PeterException {
         try {
-            return LocalDate.parse(dateText);
+            return ScheduleDateTime.parseUserInput(dateText);
         } catch (DateTimeParseException e) {
-            throw new PeterException("Please enter the " + dateName
-                    + " date in yyyy-MM-dd format (e.g., 2019-10-15).", e);
+            throw new PeterException("Please enter the " + dateName + " date as yyyy-MM-dd"
+                    + " or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).", e);
         }
     }
 

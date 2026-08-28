@@ -64,7 +64,7 @@ New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
 $uiTestDataFile = Join-Path $uiTestDataDirectory 'peter.txt'
 $uiTestData = @(
     'T | 1 | read book',
-    'D | 0 | return book | 2019-06-06',
+    'D | 0 | return book | 2019-06-06T18:00',
     'E | 1 | project meeting | 2019-08-06 | 2019-08-07'
 )
 $utf8WithBom = New-Object System.Text.UTF8Encoding($true)
@@ -95,7 +95,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][ ] return book (by: Jun 6 2019)
+2.[D][ ] return book (by: Jun 6 2019, 6:00 PM)
 3.[E][X] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 ____________________________________________________________
 ____________________________________________________________
@@ -285,10 +285,10 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
-## Test case: parse and format schedule dates
+## Test case: parse and format schedule dates and times
 
-**Aim:** Verify that deadline and event dates accept valid `yyyy-MM-dd` input,
-display as `MMM d yyyy`, and reject malformed or impossible dates.
+**Aim:** Verify that schedules accept `yyyy-MM-dd` dates and `d/M/yyyy HHmm`
+date-times, display them clearly, and reject malformed or impossible values.
 
 **Command:**
 
@@ -307,8 +307,8 @@ java -cp $uiTestBuildDirectory Peter
 ```text
 deadline return book /by 2019-02-29
 event holiday /from 2019-12-01 /to tomorrow
-deadline return book /by 2019-10-15
-event holiday /from 2019-12-01 /to 2019-12-02
+deadline return book /by 2/12/2019 1800
+event holiday /from 1/12/2019 0900 /to 2/12/2019 1730
 list
 bye
 ```
@@ -326,25 +326,25 @@ Yo! I'm Peter.
 What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
-Please enter the due date in yyyy-MM-dd format (e.g., 2019-10-15).
+Please enter the due date as yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).
 ____________________________________________________________
 ____________________________________________________________
-Please enter the end date in yyyy-MM-dd format (e.g., 2019-10-15).
+Please enter the end date as yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Oct 15 2019)
+  [D][ ] return book (by: Dec 2 2019, 6:00 PM)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] holiday (from: Dec 1 2019 to: Dec 2 2019)
+  [E][ ] holiday (from: Dec 1 2019, 9:00 AM to: Dec 2 2019, 5:30 PM)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
-1.[D][ ] return book (by: Oct 15 2019)
-2.[E][ ] holiday (from: Dec 1 2019 to: Dec 2 2019)
+1.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+2.[E][ ] holiday (from: Dec 1 2019, 9:00 AM to: Dec 2 2019, 5:30 PM)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

@@ -1,19 +1,19 @@
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
- * Represents a task that must be completed by a particular date.
+ * Represents a task that must be completed by a particular date and time.
  */
 public class Deadline extends Task {
-    private final LocalDate by;
+    private final LocalDateTime by;
 
-    public Deadline(String description, LocalDate by) {
+    public Deadline(String description, LocalDateTime by) {
         super(description, TaskType.DEADLINE);
         this.by = by;
     }
 
     @Override
     public String getScheduleDetails() {
-        return " (by: " + formatDate(by) + ")";
+        return " (by: " + ScheduleDateTime.format(by) + ")";
     }
 
     @Override

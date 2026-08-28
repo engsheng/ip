@@ -4,7 +4,6 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,9 +74,11 @@ public final class Storage {
         try {
             task = switch (taskParts[0]) {
                 case "T" -> new Todo(taskParts[2]);
-                case "D" -> new Deadline(taskParts[2], LocalDate.parse(taskParts[3]));
-                case "E" -> new Event(taskParts[2], LocalDate.parse(taskParts[3]),
-                        LocalDate.parse(taskParts[4]));
+                case "D" -> new Deadline(taskParts[2],
+                        ScheduleDateTime.parseStoredValue(taskParts[3]));
+                case "E" -> new Event(taskParts[2],
+                        ScheduleDateTime.parseStoredValue(taskParts[3]),
+                        ScheduleDateTime.parseStoredValue(taskParts[4]));
                 default -> throw invalidDataException(lineNumber);
             };
         } catch (DateTimeParseException e) {
