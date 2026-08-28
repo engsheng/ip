@@ -14,6 +14,9 @@ program continues to accept the next command.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -44,6 +47,62 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: load saved tasks at startup
+
+**Aim:** Verify that todo, deadline, and event tasks are loaded from the data
+file with their saved completion statuses when the program starts.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+$uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
+New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
+$uiTestDataFile = Join-Path $uiTestDataDirectory 'peter.txt'
+$uiTestData = @(
+    'T | 1 | read book',
+    'D | 0 | return book | June 6th',
+    'E | 1 | project meeting | Aug 6th 2pm | 4pm'
+)
+$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][X] read book
+2.[D][ ] return book (by: June 6th)
+3.[E][X] project meeting (from: Aug 6th 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: reject invalid mark and unmark task numbers
 
 **Aim:** Verify that `mark` and `unmark` reject missing, non-numeric, and
@@ -55,6 +114,9 @@ out-of-range task numbers without ending the program.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -122,6 +184,9 @@ along with a description, start time, and end time.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -179,6 +244,9 @@ description, and a due date, while allowing the program to continue afterward.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -228,6 +296,9 @@ added to the task list.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -269,6 +340,9 @@ details, updates the task count, and renumbers the remaining tasks.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -336,6 +410,9 @@ task numbers, handles an empty list, and continues accepting commands.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -409,6 +486,9 @@ the updated status, and that deleting a completed task preserves its status.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -483,6 +563,9 @@ rejected instead of being accepted as meaningful task details.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 
@@ -532,6 +615,9 @@ expected console interaction while each successful change is saved silently.
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
 javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
 

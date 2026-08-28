@@ -18,7 +18,7 @@ public class Peter {
         System.out.println(divider);
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = Storage.load();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(divider);
