@@ -2,39 +2,27 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Peter {
     public static void main(String[] args) {
-        String divider = "____________________________________________________________";
-        String banner = " ____      _\n"
-                + "|  _ \\ ___| |_ ___ _ __\n"
-                + "| |_) / _ \\ __/ _ \\ '__|\n"
-                + "|  __/  __/ ||  __/ |\n"
-                + "|_|   \\___|\\__\\___|_|\n";
+        Ui ui = new Ui();
+        ui.showWelcome();
 
-        System.out.println(divider);
-        System.out.print(banner);
-        System.out.println("Yo! I'm Peter.");
-        System.out.println("What crazy adventures are we making today?");
-        System.out.println(divider);
-
-        Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks;
         try {
             tasks = Storage.load();
         } catch (PeterException e) {
-            System.out.println(e.getMessage());
-            System.out.println(divider);
+            ui.showError(e.getMessage());
+            ui.showDivider();
             return;
         }
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
-            System.out.println(divider);
+        while (ui.hasNextCommand()) {
+            String command = ui.readCommand();
+            ui.showDivider();
             try {
                 if (command.equals("bye")) {
-                    System.out.println("Bye. Hope to see you again soon!");
-                    System.out.println(divider);
+                    ui.showGoodbye();
+                    ui.showDivider();
                     break;
                 } else if (command.equals("list")) {
                     System.out.println("Here are the tasks in your list:");
@@ -147,9 +135,9 @@ public class Peter {
                     throw new PeterException("I'm sorry, but I don't understand that command. Please try again.");
                 }
             } catch (PeterException e) {
-                System.out.println(e.getMessage());
+                ui.showError(e.getMessage());
             }
-            System.out.println(divider);
+            ui.showDivider();
         }
     }
 
