@@ -1,8 +1,9 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Peter {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String divider = "____________________________________________________________";
         String banner = " ____      _\n"
                 + "|  _ \\ ___| |_ ___ _ __\n"
@@ -40,6 +41,7 @@ public class Peter {
                         throw new PeterException("Please include a description after 'todo'.");
                     }
                     tasks.add(new Todo(description));
+                    Storage.save(tasks);
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [T][ ] " + description);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -64,6 +66,7 @@ public class Peter {
                         throw new PeterException("Please include a due date after '/by'.");
                     }
                     tasks.add(new Deadline(description, by));
+                    Storage.save(tasks);
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [D][ ] " + description + " (by: " + by + ")");
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -98,22 +101,26 @@ public class Peter {
                         throw new PeterException("Please include an end time after '/to'.");
                     }
                     tasks.add(new Event(description, from, to));
+                    Storage.save(tasks);
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [E][ ] " + description + " (from: " + from + " to: " + to + ")");
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskIndex = getTaskIndex(command, "mark", tasks.size());
                     tasks.get(taskIndex).markAsDone();
+                    Storage.save(tasks);
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  [X] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     int taskIndex = getTaskIndex(command, "unmark", tasks.size());
                     tasks.get(taskIndex).unmarkAsDone();
+                    Storage.save(tasks);
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  [ ] " + tasks.get(taskIndex).getDescription());
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     int taskIndex = getTaskIndex(command, "delete", tasks.size());
                     Task removedTask = tasks.remove(taskIndex);
+                    Storage.save(tasks);
                     System.out.println("Noted. I've removed this task:");
                     System.out.println("  [" + removedTask.getTaskTypeIcon() + "]["
                             + removedTask.getStatusIcon() + "] " + removedTask.getDescription()
