@@ -1,8 +1,13 @@
-public class Event extends Task {
-    private final String from;
-    private final String to;
+import java.time.LocalDate;
 
-    public Event(String description, String from, String to) {
+/**
+ * Represents an event occurring between two dates.
+ */
+public class Event extends Task {
+    private final LocalDate from;
+    private final LocalDate to;
+
+    public Event(String description, LocalDate from, LocalDate to) {
         super(description, TaskType.EVENT);
         this.from = from;
         this.to = to;
@@ -10,7 +15,7 @@ public class Event extends Task {
 
     @Override
     public String getScheduleDetails() {
-        return " (from: " + from + " to: " + to + ")";
+        return " (from: " + formatDate(from) + " to: " + formatDate(to) + ")";
     }
 
     @Override

@@ -1,14 +1,19 @@
-public class Deadline extends Task {
-    private final String by;
+import java.time.LocalDate;
 
-    public Deadline(String description, String by) {
+/**
+ * Represents a task that must be completed by a particular date.
+ */
+public class Deadline extends Task {
+    private final LocalDate by;
+
+    public Deadline(String description, LocalDate by) {
         super(description, TaskType.DEADLINE);
         this.by = by;
     }
 
     @Override
     public String getScheduleDetails() {
-        return " (by: " + by + ")";
+        return " (by: " + formatDate(by) + ")";
     }
 
     @Override

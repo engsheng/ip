@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -72,27 +74,29 @@ public class Peter {
                         throw new PeterException("Please include a due date after '/by'.");
                     }
                     validateStorageFields(description, by);
-                    addTask(tasks, new Deadline(description, by));
+                    Deadline deadline = new Deadline(description, parseDate(by, "due"));
+                    addTask(tasks, deadline);
                     System.out.println("Got it. I've added this task:");
-                    System.out.println("  [D][ ] " + description + " (by: " + by + ")");
+                    System.out.println("  [D][ ] " + description + deadline.getScheduleDetails());
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     int fromMarkerIndex = command.indexOf(" /from ");
                     int toMarkerIndex = command.indexOf(" /to ");
                     if (fromMarkerIndex == -1 || toMarkerIndex == -1 || fromMarkerIndex >= toMarkerIndex) {
                         if (command.endsWith(" /from")) {
-                            throw new PeterException("Please include a start time after '/from'.");
+                            throw new PeterException("Please include a start date after '/from'.");
                         }
                         if (command.endsWith(" /to")) {
-                            throw new PeterException("Please include an end time after '/to'.");
+                            throw new PeterException("Please include an end date after '/to'.");
                         }
-                        throw new PeterException("Use 'event <description> /from <start> /to <end>'.");
+                        throw new PeterException(
+                                "Use 'event <description> /from <start-date> /to <end-date>'.");
                     }
                     if (fromMarkerIndex <= 6) {
                         throw new PeterException("Please include a description before '/from'.");
                     }
                     if (toMarkerIndex <= fromMarkerIndex + 7) {
-                        throw new PeterException("Please include a start time after '/from'.");
+                        throw new PeterException("Please include a start date after '/from'.");
                     }
                     String description = command.substring(6, fromMarkerIndex);
                     String from = command.substring(fromMarkerIndex + 7, toMarkerIndex);
@@ -101,15 +105,17 @@ public class Peter {
                         throw new PeterException("Please include a description before '/from'.");
                     }
                     if (from.isBlank()) {
-                        throw new PeterException("Please include a start time after '/from'.");
+                        throw new PeterException("Please include a start date after '/from'.");
                     }
                     if (to.isBlank()) {
-                        throw new PeterException("Please include an end time after '/to'.");
+                        throw new PeterException("Please include an end date after '/to'.");
                     }
                     validateStorageFields(description, from, to);
-                    addTask(tasks, new Event(description, from, to));
+                    Event event = new Event(description, parseDate(from, "start"),
+                            parseDate(to, "end"));
+                    addTask(tasks, event);
                     System.out.println("Got it. I've added this task:");
-                    System.out.println("  [E][ ] " + description + " (from: " + from + " to: " + to + ")");
+                    System.out.println("  [E][ ] " + description + event.getScheduleDetails());
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskIndex = getTaskIndex(command, "mark", tasks.size());
@@ -147,6 +153,18 @@ public class Peter {
             if (field.contains(" | ")) {
                 throw new PeterException("Oh dear!Task details cannot contain ' | '.");
             }
+        }
+    }
+
+    /**
+     * Parses a user-entered date in the application's ISO date format.
+     */
+    private static LocalDate parseDate(String dateText, String dateName) throws PeterException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException e) {
+            throw new PeterException("Please enter the " + dateName
+                    + " date in yyyy-MM-dd format (e.g., 2019-10-15).", e);
         }
     }
 
