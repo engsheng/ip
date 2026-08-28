@@ -49,8 +49,8 @@ ____________________________________________________________
 
 ## Test case: load saved tasks at startup
 
-**Aim:** Verify that todo, deadline, and event tasks are loaded from the data
-file with their saved completion statuses when the program starts.
+**Aim:** Verify that todo, deadline, and event tasks are loaded from a UTF-8
+data file with a byte-order mark and retain their saved completion statuses.
 
 **Command:**
 
@@ -67,8 +67,8 @@ $uiTestData = @(
     'D | 0 | return book | June 6th',
     'E | 1 | project meeting | Aug 6th 2pm | 4pm'
 )
-$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
-[System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
+$utf8WithBom = New-Object System.Text.UTF8Encoding($true)
+[System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithBom)
 Set-Location $uiTestRunDirectory
 java -cp $uiTestBuildDirectory Peter
 ```
@@ -667,6 +667,193 @@ ____________________________________________________________
 Noted. I've removed this task:
   [D][ ] return book (by: June 6th)
 Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: reject malformed saved task data
+
+**Aim:** Verify that invalid saved records identify the affected line and stop
+startup gracefully without displaying a Java exception.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+$uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
+New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
+$uiTestDataFile = Join-Path $uiTestDataDirectory 'peter.txt'
+$uiTestData = @('', 'T | 0 | read book', 'D | maybe | return book | June 6th')
+$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+Oh dear! The task data file is invalid at line 3. Please fix or remove it before restarting me!
+____________________________________________________________
+```
+
+## Test case: handle an unreadable task data path
+
+**Aim:** Verify that a data path that cannot be read as a file produces a
+helpful message and stops startup gracefully.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+$uiTestDataPath = Join-Path $uiTestRunDirectory 'data\peter.txt'
+New-Item -ItemType Directory -Force -Path $uiTestDataPath | Out-Null
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+Oh dear! I couldn't read the task data file. Please check that it is accessible.
+____________________________________________________________
+```
+
+## Test case: roll back a task when saving fails
+
+**Aim:** Verify that a failed save displays a helpful message, keeps the
+chatbot running, and does not leave an unsaved task in memory.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+New-Item -ItemType File -Path (Join-Path $uiTestRunDirectory 'data') | Out-Null
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+todo read book
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Oh dear! I couldn't save your tasks. Please check that the data folder is writable.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: reject the storage delimiter in task details
+
+**Aim:** Verify that task details cannot contain the data-file delimiter and
+therefore cannot create records that fail during the next startup.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory src\main\java\*.java
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory Peter
+```
+
+**Inputs:**
+
+```text
+todo read | book
+deadline return book /by June | 6th
+event project meeting /from 2 | pm /to 4pm
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Task details cannot contain ' | '.
+____________________________________________________________
+____________________________________________________________
+Task details cannot contain ' | '.
+____________________________________________________________
+____________________________________________________________
+Task details cannot contain ' | '.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
