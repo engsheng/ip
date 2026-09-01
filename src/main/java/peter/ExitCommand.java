@@ -1,3 +1,5 @@
+package peter;
+
 /**
  * Says goodbye and ends the program.
  */

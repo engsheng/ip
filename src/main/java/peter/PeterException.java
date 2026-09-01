@@ -1,3 +1,5 @@
+package peter;
+
 /**
  * Represents an error that can be explained clearly to the user.
  */

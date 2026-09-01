@@ -1,3 +1,5 @@
+package peter;
+
 /**
  * Marks a task as done or not done. One class covers both directions because
  * they differ only in the status being applied.

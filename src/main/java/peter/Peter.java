@@ -1,3 +1,5 @@
+package peter;
+
 /**
  * Coordinates the task list, storage, and console UI for the chatbot.
  */

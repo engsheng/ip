@@ -1,3 +1,5 @@
+package peter;
+
 /**
  * Adds a new task to the task list.
  */

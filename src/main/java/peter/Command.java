@@ -1,3 +1,5 @@
+package peter;
+
 /**
  * Represents a user command that has been understood and is ready to run.
  *

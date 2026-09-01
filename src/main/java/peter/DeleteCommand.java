@@ -1,3 +1,5 @@
+package peter;
+
 /**
  * Deletes a task identified by its one-based task number.
  */
