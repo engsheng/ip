@@ -1,7 +1,10 @@
-package peter;
+package peter.ui;
 
 import java.time.LocalDate;
 import java.util.Scanner;
+import peter.task.ScheduleDateTime;
+import peter.task.Task;
+import peter.task.TaskList;
 
 /**
  * Handles the application's basic console input and output.

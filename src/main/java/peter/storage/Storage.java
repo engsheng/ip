@@ -1,4 +1,4 @@
-package peter;
+package peter.storage;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,6 +9,12 @@ import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import peter.PeterException;
+import peter.task.Deadline;
+import peter.task.Event;
+import peter.task.ScheduleDateTime;
+import peter.task.Task;
+import peter.task.Todo;
 
 /**
  * Loads and saves the task list using the application's data file.

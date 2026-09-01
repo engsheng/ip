@@ -1,4 +1,10 @@
-package peter;
+package peter.command;
+
+import peter.PeterException;
+import peter.storage.Storage;
+import peter.task.Task;
+import peter.task.TaskList;
+import peter.ui.Ui;
 
 /**
  * Adds a new task to the task list.

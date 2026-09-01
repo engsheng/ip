@@ -1,4 +1,10 @@
-package peter;
+package peter.command;
+
+import peter.Parser;
+import peter.PeterException;
+import peter.storage.Storage;
+import peter.task.TaskList;
+import peter.ui.Ui;
 
 /**
  * Marks a task as done or not done. One class covers both directions because

@@ -1,5 +1,10 @@
 package peter;
 
+import peter.command.Command;
+import peter.storage.Storage;
+import peter.task.TaskList;
+import peter.ui.Ui;
+
 /**
  * Coordinates the task list, storage, and console UI for the chatbot.
  */

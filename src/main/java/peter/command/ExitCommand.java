@@ -1,4 +1,8 @@
-package peter;
+package peter.command;
+
+import peter.storage.Storage;
+import peter.task.TaskList;
+import peter.ui.Ui;
 
 /**
  * Says goodbye and ends the program.

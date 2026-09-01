@@ -13,7 +13,7 @@ program continues to accept the next command.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -57,7 +57,7 @@ data file with a byte-order mark and retain their saved completion statuses.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
 New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
@@ -113,7 +113,7 @@ out-of-range task numbers without ending the program.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -183,7 +183,7 @@ along with a description, start date, and end date.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -243,7 +243,7 @@ description, and a due date, while allowing the program to continue afterward.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -295,7 +295,7 @@ date-times, display them clearly, and reject malformed or impossible values.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -362,7 +362,7 @@ unmatched dates.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
 New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
@@ -436,7 +436,7 @@ added to the task list.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -480,7 +480,7 @@ details, updates the task count, and renumbers the remaining tasks.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -550,7 +550,7 @@ task numbers, handles an empty list, and continues accepting commands.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -626,7 +626,7 @@ the updated status, and that deleting a completed task preserves its status.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -703,7 +703,7 @@ rejected instead of being accepted as meaningful task details.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -755,7 +755,7 @@ expected console interaction while each successful change is saved silently.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -824,7 +824,7 @@ startup gracefully without displaying a Java exception.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
 New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
@@ -867,7 +867,7 @@ helpful message and stops startup gracefully.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataPath = Join-Path $uiTestRunDirectory 'data\peter.txt'
 New-Item -ItemType Directory -Force -Path $uiTestDataPath | Out-Null
@@ -906,7 +906,7 @@ chatbot running, and does not leave an unsaved task in memory.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 New-Item -ItemType File -Path (Join-Path $uiTestRunDirectory 'data') | Out-Null
@@ -955,7 +955,7 @@ therefore cannot create records that fail during the next startup.
 ```text
 $uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
 New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory src\main\java\peter\*.java
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory

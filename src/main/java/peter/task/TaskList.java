@@ -1,4 +1,4 @@
-package peter;
+package peter.task;
 
 import java.util.ArrayList;
 import java.util.Collections;
