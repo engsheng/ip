@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 /**
  * Coordinates the task list, storage, and console UI for the chatbot.
@@ -7,7 +6,7 @@ import java.util.ArrayList;
 public class Peter {
     private final Storage storage;
     private final Ui ui;
-    private final ArrayList<Task> tasks;
+    private final TaskList tasks;
 
     /** Loading failure retained so it can be displayed after the welcome message. */
     private final PeterException loadingError;
@@ -21,12 +20,12 @@ public class Peter {
         this.storage = new Storage(filePath);
         this.ui = new Ui();
 
-        ArrayList<Task> loadedTasks;
+        TaskList loadedTasks;
         PeterException loadError = null;
         try {
-            loadedTasks = storage.load();
+            loadedTasks = new TaskList(storage.load());
         } catch (PeterException e) {
-            loadedTasks = new ArrayList<>();
+            loadedTasks = new TaskList();
             loadError = e;
         }
         this.tasks = loadedTasks;
@@ -57,11 +56,11 @@ public class Peter {
                     showTaskList();
                     break;
                 case "on":
-                    printTasksOnDate(tasks, Parser.parseQueryDate(command));
+                    printTasksOnDate(Parser.parseQueryDate(command));
                     break;
                 case "todo", "deadline", "event":
                     Task task = Parser.parseTask(command);
-                    addTask(tasks, task);
+                    addTask(task);
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  [" + task.getTaskTypeIcon() + "][ ] "
                             + task.getDescription() + task.getScheduleDetails());
@@ -108,7 +107,7 @@ public class Peter {
      */
     private void updateTaskStatus(String command, boolean isDone) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());
-        changeTaskStatus(tasks, taskIndex, isDone);
+        changeTaskStatus(taskIndex, isDone);
         if (isDone) {
             System.out.println("Nice! I've marked this task as done:");
             System.out.println("  [X] " + tasks.get(taskIndex).getDescription());
@@ -123,7 +122,7 @@ public class Peter {
      */
     private void removeTask(String command) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());
-        Task removedTask = deleteTask(tasks, taskIndex);
+        Task removedTask = deleteTask(taskIndex);
         System.out.println("Noted. I've removed this task:");
         System.out.println("  [" + removedTask.getTaskTypeIcon() + "]["
                 + removedTask.getStatusIcon() + "] " + removedTask.getDescription()
@@ -135,7 +134,7 @@ public class Peter {
      * Prints scheduled tasks occurring on a date, using their original task
      * numbers so subsequent task commands can refer to them directly.
      */
-    private static void printTasksOnDate(ArrayList<Task> tasks, LocalDate date) {
+    private void printTasksOnDate(LocalDate date) {
         boolean foundTask = false;
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
@@ -159,12 +158,12 @@ public class Peter {
     /**
      * Adds and saves a task, undoing the addition if saving fails.
      */
-    private void addTask(ArrayList<Task> tasks, Task task) throws PeterException {
+    private void addTask(Task task) throws PeterException {
         tasks.add(task);
         try {
-            storage.save(tasks);
+            storage.save(tasks.asList());
         } catch (PeterException e) {
-            tasks.remove(tasks.size() - 1);
+            tasks.delete(tasks.size() - 1);
             throw e;
         }
     }
@@ -172,23 +171,14 @@ public class Peter {
     /**
      * Changes and saves a task status, restoring the old status if saving fails.
      */
-    private void changeTaskStatus(ArrayList<Task> tasks, int taskIndex, boolean isDone)
-            throws PeterException {
+    private void changeTaskStatus(int taskIndex, boolean isDone) throws PeterException {
         Task task = tasks.get(taskIndex);
         boolean previousStatus = task.isDone();
-        if (isDone) {
-            task.markAsDone();
-        } else {
-            task.unmarkAsDone();
-        }
+        tasks.setDone(taskIndex, isDone);
         try {
-            storage.save(tasks);
+            storage.save(tasks.asList());
         } catch (PeterException e) {
-            if (previousStatus) {
-                task.markAsDone();
-            } else {
-                task.unmarkAsDone();
-            }
+            tasks.setDone(taskIndex, previousStatus);
             throw e;
         }
     }
@@ -196,10 +186,10 @@ public class Peter {
     /**
      * Deletes and saves a task, restoring it at the same position if saving fails.
      */
-    private Task deleteTask(ArrayList<Task> tasks, int taskIndex) throws PeterException {
-        Task removedTask = tasks.remove(taskIndex);
+    private Task deleteTask(int taskIndex) throws PeterException {
+        Task removedTask = tasks.delete(taskIndex);
         try {
-            storage.save(tasks);
+            storage.save(tasks.asList());
             return removedTask;
         } catch (PeterException e) {
             tasks.add(taskIndex, removedTask);
