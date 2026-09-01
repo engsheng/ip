@@ -1,5 +1,3 @@
-import java.time.LocalDate;
-
 /**
  * Coordinates the task list, storage, and console UI for the chatbot.
  */
@@ -53,18 +51,15 @@ public class Peter {
                     ui.showDivider();
                     return;
                 case "list":
-                    showTaskList();
+                    ui.showTaskList(tasks);
                     break;
                 case "on":
-                    printTasksOnDate(Parser.parseQueryDate(command));
+                    ui.showTasksOnDate(tasks, Parser.parseQueryDate(command));
                     break;
                 case "todo", "deadline", "event":
                     Task task = Parser.parseTask(command);
                     addTask(task);
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  [" + task.getTaskTypeIcon() + "][ ] "
-                            + task.getDescription() + task.getScheduleDetails());
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showAddedTask(task, tasks.size());
                     break;
                 case "mark":
                     updateTaskStatus(command, true);
@@ -90,31 +85,12 @@ public class Peter {
     }
 
     /**
-     * Displays every task with its one-based list number.
-     */
-    private void showTaskList() {
-        System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            System.out.println((i + 1) + ".[" + task.getTaskTypeIcon() + "]["
-                    + task.getStatusIcon() + "] "
-                    + task.getDescription() + task.getScheduleDetails());
-        }
-    }
-
-    /**
      * Parses, applies, and reports a mark or unmark command.
      */
     private void updateTaskStatus(String command, boolean isDone) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());
         changeTaskStatus(taskIndex, isDone);
-        if (isDone) {
-            System.out.println("Nice! I've marked this task as done:");
-            System.out.println("  [X] " + tasks.get(taskIndex).getDescription());
-        } else {
-            System.out.println("OK, I've marked this task as not done yet:");
-            System.out.println("  [ ] " + tasks.get(taskIndex).getDescription());
-        }
+        ui.showTaskStatusChange(tasks.get(taskIndex), isDone);
     }
 
     /**
@@ -123,36 +99,7 @@ public class Peter {
     private void removeTask(String command) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());
         Task removedTask = deleteTask(taskIndex);
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  [" + removedTask.getTaskTypeIcon() + "]["
-                + removedTask.getStatusIcon() + "] " + removedTask.getDescription()
-                + removedTask.getScheduleDetails());
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-    }
-
-    /**
-     * Prints scheduled tasks occurring on a date, using their original task
-     * numbers so subsequent task commands can refer to them directly.
-     */
-    private void printTasksOnDate(LocalDate date) {
-        boolean foundTask = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            if (task.occursOn(date)) {
-                if (!foundTask) {
-                    System.out.println("Here are the scheduled tasks on "
-                            + ScheduleDateTime.format(date) + ":");
-                }
-                System.out.println((i + 1) + ".[" + task.getTaskTypeIcon() + "]["
-                        + task.getStatusIcon() + "] " + task.getDescription()
-                        + task.getScheduleDetails());
-                foundTask = true;
-            }
-        }
-        if (!foundTask) {
-            System.out.println("There are no scheduled tasks on "
-                    + ScheduleDateTime.format(date) + ".");
-        }
+        ui.showRemovedTask(removedTask, tasks.size());
     }
 
     /**
