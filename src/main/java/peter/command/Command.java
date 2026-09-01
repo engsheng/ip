@@ -1,3 +1,10 @@
+package peter.command;
+
+import peter.PeterException;
+import peter.storage.Storage;
+import peter.task.TaskList;
+import peter.ui.Ui;
+
 /**
  * Represents a user command that has been understood and is ready to run.
  *

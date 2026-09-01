@@ -1,3 +1,5 @@
+package peter.task;
+
 public enum TaskType {
     TODO("T"),
     DEADLINE("D"),

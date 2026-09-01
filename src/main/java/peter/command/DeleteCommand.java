@@ -1,3 +1,12 @@
+package peter.command;
+
+import peter.Parser;
+import peter.PeterException;
+import peter.storage.Storage;
+import peter.task.Task;
+import peter.task.TaskList;
+import peter.ui.Ui;
+
 /**
  * Deletes a task identified by its one-based task number.
  */

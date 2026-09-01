@@ -1,6 +1,20 @@
+package peter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import peter.command.AddCommand;
+import peter.command.Command;
+import peter.command.DeleteCommand;
+import peter.command.ExitCommand;
+import peter.command.FindOnDateCommand;
+import peter.command.ListCommand;
+import peter.command.MarkCommand;
+import peter.task.Deadline;
+import peter.task.Event;
+import peter.task.ScheduleDateTime;
+import peter.task.Task;
+import peter.task.Todo;
 
 /**
  * Interprets user commands and converts their arguments into application data.
