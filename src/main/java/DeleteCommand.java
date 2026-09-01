@@ -1,0 +1,27 @@
+/**
+ * Deletes a task identified by its one-based task number.
+ */
+public class DeleteCommand extends Command {
+    private final String command;
+
+    /**
+     * Creates a command that deletes the task named by a delete command.
+     *
+     * <p>The command text is kept rather than a task index because validating
+     * the task number needs the task count, which is only known when the
+     * command runs.
+     *
+     * @param command complete delete command entered by the user
+     */
+    public DeleteCommand(String command) {
+        this.command = command;
+    }
+
+    @Override
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException {
+        int taskIndex = Parser.parseTaskIndex(command, tasks.size());
+        Task removedTask = tasks.delete(taskIndex);
+        saveOrRollback(tasks, storage, () -> tasks.add(taskIndex, removedTask));
+        ui.showRemovedTask(removedTask, tasks.size());
+    }
+}

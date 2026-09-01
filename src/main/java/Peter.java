@@ -41,107 +41,25 @@ public class Peter {
             return;
         }
 
-        while (ui.hasNextCommand()) {
-            String command = ui.readCommand();
-            ui.showDivider();
+        // The extra hasNextCommand check stops the loop when input runs out
+        // without a bye command, which happens when input is piped in.
+        boolean isExit = false;
+        while (!isExit && ui.hasNextCommand()) {
             try {
-                switch (Parser.getCommandWord(command)) {
-                case "bye":
-                    ui.showGoodbye();
-                    ui.showDivider();
-                    return;
-                case "list":
-                    ui.showTaskList(tasks);
-                    break;
-                case "on":
-                    ui.showTasksOnDate(tasks, Parser.parseQueryDate(command));
-                    break;
-                case "todo", "deadline", "event":
-                    Task task = Parser.parseTask(command);
-                    addTask(task);
-                    ui.showAddedTask(task, tasks.size());
-                    break;
-                case "mark":
-                    updateTaskStatus(command, true);
-                    break;
-                case "unmark":
-                    updateTaskStatus(command, false);
-                    break;
-                case "delete":
-                    removeTask(command);
-                    break;
-                default:
-                    throw new AssertionError("Parser returned an unsupported command");
-                }
+                String fullCommand = ui.readCommand();
+                ui.showDivider();
+                Command command = Parser.parse(fullCommand);
+                command.execute(tasks, ui, storage);
+                isExit = command.isExit();
             } catch (PeterException e) {
                 ui.showError(e.getMessage());
+            } finally {
+                ui.showDivider();
             }
-            ui.showDivider();
         }
     }
 
     public static void main(String[] args) {
         new Peter("data/peter.txt").run();
     }
-
-    /**
-     * Parses, applies, and reports a mark or unmark command.
-     */
-    private void updateTaskStatus(String command, boolean isDone) throws PeterException {
-        int taskIndex = Parser.parseTaskIndex(command, tasks.size());
-        changeTaskStatus(taskIndex, isDone);
-        ui.showTaskStatusChange(tasks.get(taskIndex), isDone);
-    }
-
-    /**
-     * Parses, applies, and reports a delete command.
-     */
-    private void removeTask(String command) throws PeterException {
-        int taskIndex = Parser.parseTaskIndex(command, tasks.size());
-        Task removedTask = deleteTask(taskIndex);
-        ui.showRemovedTask(removedTask, tasks.size());
-    }
-
-    /**
-     * Adds and saves a task, undoing the addition if saving fails.
-     */
-    private void addTask(Task task) throws PeterException {
-        tasks.add(task);
-        try {
-            storage.save(tasks.asList());
-        } catch (PeterException e) {
-            tasks.delete(tasks.size() - 1);
-            throw e;
-        }
-    }
-
-    /**
-     * Changes and saves a task status, restoring the old status if saving fails.
-     */
-    private void changeTaskStatus(int taskIndex, boolean isDone) throws PeterException {
-        Task task = tasks.get(taskIndex);
-        boolean previousStatus = task.isDone();
-        tasks.setDone(taskIndex, isDone);
-        try {
-            storage.save(tasks.asList());
-        } catch (PeterException e) {
-            tasks.setDone(taskIndex, previousStatus);
-            throw e;
-        }
-    }
-
-    /**
-     * Deletes and saves a task, restoring it at the same position if saving fails.
-     */
-    private Task deleteTask(int taskIndex) throws PeterException {
-        Task removedTask = tasks.delete(taskIndex);
-        try {
-            storage.save(tasks.asList());
-            return removedTask;
-        } catch (PeterException e) {
-            tasks.add(taskIndex, removedTask);
-            throw e;
-        }
-    }
-
 }

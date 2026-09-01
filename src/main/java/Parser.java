@@ -10,13 +10,33 @@ public final class Parser {
     }
 
     /**
+     * Turns a line of user input into the command it asks for.
+     *
+     * @param command complete command entered by the user
+     * @return command ready to be executed
+     * @throws PeterException if the command is unrecognized or its arguments are invalid
+     */
+    public static Command parse(String command) throws PeterException {
+        return switch (getCommandWord(command)) {
+            case "bye" -> new ExitCommand();
+            case "list" -> new ListCommand();
+            case "on" -> new FindOnDateCommand(parseQueryDate(command));
+            case "todo", "deadline", "event" -> new AddCommand(parseTask(command));
+            case "mark" -> new MarkCommand(command, true);
+            case "unmark" -> new MarkCommand(command, false);
+            case "delete" -> new DeleteCommand(command);
+            default -> throw new AssertionError("Unhandled command word");
+        };
+    }
+
+    /**
      * Identifies the command word while rejecting unsupported command shapes.
      *
      * @param command complete command entered by the user
      * @return recognized command word
      * @throws PeterException if the command is not recognized
      */
-    public static String getCommandWord(String command) throws PeterException {
+    private static String getCommandWord(String command) throws PeterException {
         if (command.equals("bye") || command.equals("list")) {
             return command;
         }
@@ -39,7 +59,7 @@ public final class Parser {
      * @return task described by the command
      * @throws PeterException if a required field is missing or invalid
      */
-    public static Task parseTask(String command) throws PeterException {
+    private static Task parseTask(String command) throws PeterException {
         return switch (getCommandWord(command)) {
             case "todo" -> parseTodo(command);
             case "deadline" -> parseDeadline(command);
@@ -56,7 +76,7 @@ public final class Parser {
      * @return requested date
      * @throws PeterException if the date is missing or invalid
      */
-    public static LocalDate parseQueryDate(String command) throws PeterException {
+    private static LocalDate parseQueryDate(String command) throws PeterException {
         String dateText = command.substring("on".length()).trim();
         if (dateText.isEmpty()) {
             throw new PeterException("Use 'on <date>' (e.g., on 2019-12-02).");
@@ -71,6 +91,9 @@ public final class Parser {
 
     /**
      * Converts a one-based task number in a command into a list index.
+     *
+     * <p>Called by the mark, unmark, and delete commands while they run, since
+     * the checks below need the current task count.
      *
      * @param command complete mark, unmark, or delete command
      * @param taskCount current number of tasks
