@@ -204,7 +204,17 @@ public final class Parser {
             throw new PeterException("Please include an end date after '/to'.");
         }
         validateStorageFields(description, startDate, endDate);
-        return new Event(description, parseDate(startDate, "start"), parseDate(endDate, "end"));
+
+        LocalDateTime start = parseDate(startDate, "start");
+        LocalDateTime end = parseDate(endDate, "end");
+        // An event whose end precedes its start covers no dates at all, so it
+        // would never appear under 'on'. Reject it here rather than storing a
+        // task the user can never see again.
+        if (end.isBefore(start)) {
+            throw new PeterException(
+                    "Please make sure the end date is not before the start date.");
+        }
+        return new Event(description, start, end);
     }
 
     private static LocalDateTime parseDate(String dateText, String dateName) throws PeterException {
@@ -220,7 +230,7 @@ public final class Parser {
     private static void validateStorageFields(String... fields) throws PeterException {
         for (String field : fields) {
             if (field.contains(" | ")) {
-                throw new PeterException("Oh dear!Task details cannot contain ' | '.");
+                throw new PeterException("Oh dear! Task details cannot contain ' | '.");
             }
         }
     }
