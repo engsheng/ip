@@ -44,15 +44,15 @@ public class ScheduleDateTimeTest {
     public void parseUserInput_isoDateWithoutPaddedFields_exceptionThrown() {
         // ISO_LOCAL_DATE demands two-digit month and day, and "2019-2-3" is not
         // a valid "d/M/uuuu HHmm" value either, so both attempts fail.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("2019-2-3"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("2019-2-3"));
     }
 
     @Test
     public void parseUserInput_isoDateWithImpossibleDay_exceptionThrown() {
         // 2019 is not a leap year; the strict ISO parser rejects Feb 29.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("2019-02-29"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("2019-02-29"));
     }
 
     // --- Accepted format 2: day/month/year plus 24-hour time (e.g. 2/12/2019 1800) ---
@@ -88,35 +88,35 @@ public class ScheduleDateTimeTest {
     @Test
     public void parseUserInput_dateTimeWithHourOutOfRange_exceptionThrown() {
         // "2400" rolls past the end of the day and is rejected by HHmm.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("2/12/2019 2400"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("2/12/2019 2400"));
     }
 
     @Test
     public void parseUserInput_dateTimeWithMinuteOutOfRange_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("2/12/2019 1860"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("2/12/2019 1860"));
     }
 
     @Test
     public void parseUserInput_dateTimeWithImpossibleDay_exceptionThrown() {
         // STRICT resolution means an out-of-range day is an error rather than
         // being silently shifted to Mar 1.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("29/2/2019 1800"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("29/2/2019 1800"));
     }
 
     @Test
     public void parseUserInput_dateTimeWithImpossibleMonth_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("2/13/2019 1800"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("2/13/2019 1800"));
     }
 
     @Test
     public void parseUserInput_dateTimeMissingTime_exceptionThrown() {
         // "2/12/2019" matches neither format: it is not ISO, and the time is required.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("2/12/2019"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("2/12/2019"));
     }
 
     // --- Malformed input ---
@@ -125,28 +125,28 @@ public class ScheduleDateTimeTest {
     public void parseUserInput_untrimmedValue_exceptionThrown() {
         // The method does not trim, so surrounding spaces are a parse failure.
         // Callers are expected to trim before calling.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput(" 2019-12-02 "));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput(" 2019-12-02 "));
     }
 
     @Test
     public void parseUserInput_emptyString_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput(""));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput(""));
     }
 
     @Test
     public void parseUserInput_nonDateText_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseUserInput("tomorrow"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseUserInput("tomorrow"));
     }
 
     @Test
     public void parseUserInput_nullValue_exceptionThrown() {
         // LocalDate.parse rejects null with a NullPointerException, which is not
         // a DateTimeParseException, so the contract differs for null.
-        assertThrows(NullPointerException.class,
-                () -> ScheduleDateTime.parseUserInput(null));
+        assertThrows(NullPointerException.class, () ->
+                ScheduleDateTime.parseUserInput(null));
     }
 
     // =====================================================================
@@ -191,33 +191,33 @@ public class ScheduleDateTimeTest {
     public void parseStoredValue_userInputFormat_exceptionThrown() {
         // The user-facing "d/M/uuuu HHmm" format is never written to storage,
         // so it is correctly treated as a corrupt record.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseStoredValue("2/12/2019 1800"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseStoredValue("2/12/2019 1800"));
     }
 
     @Test
     public void parseStoredValue_impossibleDate_exceptionThrown() {
         // A hand-edited save file could contain a nonexistent date.
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseStoredValue("2019-02-29T18:00"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseStoredValue("2019-02-29T18:00"));
     }
 
     @Test
     public void parseStoredValue_emptyString_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseStoredValue(""));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseStoredValue(""));
     }
 
     @Test
     public void parseStoredValue_corruptText_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> ScheduleDateTime.parseStoredValue("not-a-date"));
+        assertThrows(DateTimeParseException.class, () ->
+                ScheduleDateTime.parseStoredValue("not-a-date"));
     }
 
     @Test
     public void parseStoredValue_nullValue_exceptionThrown() {
-        assertThrows(NullPointerException.class,
-                () -> ScheduleDateTime.parseStoredValue(null));
+        assertThrows(NullPointerException.class, () ->
+                ScheduleDateTime.parseStoredValue(null));
     }
 
     // =====================================================================
@@ -287,8 +287,8 @@ public class ScheduleDateTimeTest {
 
     @Test
     public void formatDateTime_nullValue_exceptionThrown() {
-        assertThrows(NullPointerException.class,
-                () -> ScheduleDateTime.format((LocalDateTime) null));
+        assertThrows(NullPointerException.class, () ->
+                ScheduleDateTime.format((LocalDateTime) null));
     }
 
     // =====================================================================
@@ -317,8 +317,8 @@ public class ScheduleDateTimeTest {
 
     @Test
     public void formatDate_nullValue_exceptionThrown() {
-        assertThrows(NullPointerException.class,
-                () -> ScheduleDateTime.format((LocalDate) null));
+        assertThrows(NullPointerException.class, () ->
+                ScheduleDateTime.format((LocalDate) null));
     }
 
     // =====================================================================

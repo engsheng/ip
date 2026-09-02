@@ -128,8 +128,8 @@ public class TaskListTest {
 
     @Test
     public void addAtIndex_indexBeyondSize_exceptionThrown() {
-        assertThrows(IndexOutOfBoundsException.class,
-                () -> new TaskList().add(1, new Todo("first")));
+        assertThrows(IndexOutOfBoundsException.class, () ->
+                new TaskList().add(1, new Todo("first")));
     }
 
     // =====================================================================

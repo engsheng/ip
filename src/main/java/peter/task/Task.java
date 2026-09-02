@@ -109,22 +109,6 @@ public abstract class Task {
     }
 
     /**
-     * Returns whether this task's description contains the given keyword,
-     * ignoring case.
-     *
-     * <p>Only the description is searched, so a keyword matching a task's
-     * dates or type icon does not count. Matching is on any substring rather
-     * than whole words, so {@code book} also finds {@code bookshop}.
-     *
-     * @param keyword keyword to look for.
-     * @return whether the description contains the keyword.
-     */
-    public boolean hasKeyword(String keyword) {
-        return description.toLowerCase(Locale.ROOT)
-                .contains(keyword.toLowerCase(Locale.ROOT));
-    }
-
-    /**
      * Marks the task as completed. Marking an already-completed task has no
      * further effect.
      */
