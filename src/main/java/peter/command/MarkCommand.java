@@ -29,6 +29,13 @@ public class MarkCommand extends Command {
         this.isDone = isDone;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The task number is validated here rather than during parsing, since
+     * the check needs the current task count. A failed save restores the
+     * task's previous status, which may already have been the requested one.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());

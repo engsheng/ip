@@ -26,6 +26,13 @@ public class DeleteCommand extends Command {
         this.command = command;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The task number is validated here rather than during parsing, since
+     * the check needs the current task count. A failed save puts the removed
+     * task back at its original position.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());

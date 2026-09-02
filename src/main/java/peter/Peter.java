@@ -66,6 +66,14 @@ public class Peter {
         }
     }
 
+    /**
+     * Starts the chatbot using the default data file.
+     *
+     * <p>The path is relative, so tasks are saved under the directory the
+     * program is launched from.
+     *
+     * @param args ignored; the data file location is fixed
+     */
     public static void main(String[] args) {
         new Peter("data/peter.txt").run();
     }

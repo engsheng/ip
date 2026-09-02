@@ -21,6 +21,12 @@ public class FindOnDateCommand extends Command {
         this.date = date;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Reads the task list without changing it, so nothing is saved and no
+     * rollback is needed.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showTasksOnDate(tasks, date);
