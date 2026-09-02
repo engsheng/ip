@@ -84,8 +84,8 @@ public class ParserTest {
 
     @Test
     public void parse_unknownCommand_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("blah"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("blah"));
         assertEquals("I'm sorry, but I don't understand that command. Please try again.",
                 exception.getMessage());
     }
@@ -140,8 +140,8 @@ public class ParserTest {
 
     @Test
     public void parse_onCommandWithoutDate_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("on"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("on"));
         assertEquals("Use 'on <date>' (e.g., on 2019-12-02).", exception.getMessage());
     }
 
@@ -160,8 +160,8 @@ public class ParserTest {
     public void parse_onCommandWithNonIsoDate_exceptionThrown() {
         // "on" accepts only ISO dates, unlike deadline/event which also accept
         // d/M/yyyy HHmm, so the error names the one supported format.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("on 2/12/2019"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("on 2/12/2019"));
         assertEquals("Please enter the date in yyyy-MM-dd format (e.g., 2019-12-02).",
                 exception.getMessage());
     }
@@ -182,8 +182,8 @@ public class ParserTest {
 
     @Test
     public void parse_findCommandWithoutKeyword_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("find"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("find"));
         assertEquals("Use 'find <keyword>' (e.g., find book).", exception.getMessage());
     }
 
@@ -222,8 +222,8 @@ public class ParserTest {
 
     @Test
     public void parse_todoWithoutDescription_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("todo"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("todo"));
         assertEquals("Please include a description after 'todo'.", exception.getMessage());
     }
 
@@ -238,8 +238,8 @@ public class ParserTest {
     public void parse_todoDescriptionContainingStorageDelimiter_exceptionThrown() {
         // " | " separates fields in the save file, so allowing it in a
         // description would corrupt the file and break the next load.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("todo read | book"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("todo read | book"));
         assertEquals("Oh dear! Task details cannot contain ' | '.", exception.getMessage());
     }
 
@@ -268,8 +268,8 @@ public class ParserTest {
 
     @Test
     public void parse_deadlineWithoutByMarker_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("deadline return book"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("deadline return book"));
         assertEquals("Use 'deadline <description> /by <date>'.", exception.getMessage());
     }
 
@@ -277,22 +277,22 @@ public class ParserTest {
     public void parse_deadlineWithTrailingByMarker_exceptionThrown() {
         // "/by" present but nothing after it gets a more specific message than
         // the generic usage hint.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("deadline return book /by"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("deadline return book /by"));
         assertEquals("Please include a due date after '/by'.", exception.getMessage());
     }
 
     @Test
     public void parse_deadlineWithBlankDueDate_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("deadline return book /by    "));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("deadline return book /by    "));
         assertEquals("Please include a due date after '/by'.", exception.getMessage());
     }
 
     @Test
     public void parse_deadlineWithoutDescription_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("deadline /by 2019-12-02"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("deadline /by 2019-12-02"));
         assertEquals("Please include a description before '/by'.", exception.getMessage());
     }
 
@@ -304,16 +304,16 @@ public class ParserTest {
     @Test
     public void parse_deadlineWithInvalidDate_exceptionThrown() {
         // The message names which date failed, since events have three.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("deadline return book /by tomorrow"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("deadline return book /by tomorrow"));
         assertEquals("Please enter the due date as yyyy-MM-dd or d/M/yyyy HHmm"
                 + " (e.g., 2019-10-15 or 2/12/2019 1800).", exception.getMessage());
     }
 
     @Test
     public void parse_deadlineDueDateContainingStorageDelimiter_exceptionThrown() {
-        assertThrows(PeterException.class,
-                () -> Parser.parse("deadline return book /by a | b"));
+        assertThrows(PeterException.class, () ->
+                Parser.parse("deadline return book /by a | b"));
     }
 
     // =====================================================================
@@ -335,69 +335,69 @@ public class ParserTest {
 
     @Test
     public void parse_eventWithoutMarkers_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp"));
         assertEquals("Use 'event <description> /from <start-date> /to <end-date>'.",
                 exception.getMessage());
     }
 
     @Test
     public void parse_eventWithTrailingFromMarker_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /from"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /from"));
         assertEquals("Please include a start date after '/from'.", exception.getMessage());
     }
 
     @Test
     public void parse_eventWithTrailingToMarker_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /from 2019-12-02 /to"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /from 2019-12-02 /to"));
         assertEquals("Please include an end date after '/to'.", exception.getMessage());
     }
 
     @Test
     public void parse_eventWithMarkersReversed_exceptionThrown() {
         // "/to" before "/from" is rejected rather than parsed backwards.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /to 2019-12-05 /from 2019-12-02"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /to 2019-12-05 /from 2019-12-02"));
         assertEquals("Use 'event <description> /from <start-date> /to <end-date>'.",
                 exception.getMessage());
     }
 
     @Test
     public void parse_eventWithoutDescription_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event /from 2019-12-02 /to 2019-12-05"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event /from 2019-12-02 /to 2019-12-05"));
         assertEquals("Please include a description before '/from'.", exception.getMessage());
     }
 
     @Test
     public void parse_eventWithEmptyStartDate_exceptionThrown() {
         // "/from" and "/to" adjacent leaves no room for a start date.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /from /to 2019-12-05"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /from /to 2019-12-05"));
         assertEquals("Please include a start date after '/from'.", exception.getMessage());
     }
 
     @Test
     public void parse_eventWithBlankEndDate_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /from 2019-12-02 /to    "));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /from 2019-12-02 /to    "));
         assertEquals("Please include an end date after '/to'.", exception.getMessage());
     }
 
     @Test
     public void parse_eventWithInvalidStartDate_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /from tomorrow /to 2019-12-05"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /from tomorrow /to 2019-12-05"));
         assertEquals("Please enter the start date as yyyy-MM-dd or d/M/yyyy HHmm"
                 + " (e.g., 2019-10-15 or 2/12/2019 1800).", exception.getMessage());
     }
 
     @Test
     public void parse_eventWithInvalidEndDate_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /from 2019-12-02 /to tomorrow"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /from 2019-12-02 /to tomorrow"));
         assertEquals("Please enter the end date as yyyy-MM-dd or d/M/yyyy HHmm"
                 + " (e.g., 2019-10-15 or 2/12/2019 1800).", exception.getMessage());
     }
@@ -406,8 +406,8 @@ public class ParserTest {
     public void parse_eventEndingBeforeStart_exceptionThrown() {
         // Such an event would cover no dates and so could never be found
         // again under 'on', which is why it is rejected at parse time.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parse("event camp /from 2019-12-05 /to 2019-12-02"));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parse("event camp /from 2019-12-05 /to 2019-12-02"));
         assertEquals("Please make sure the end date is not before the start date.",
                 exception.getMessage());
     }
@@ -416,8 +416,8 @@ public class ParserTest {
     public void parse_eventEndingBeforeStartOnSameDay_exceptionThrown() {
         // The check compares times, not just dates, so a backwards event
         // within a single day is caught too.
-        assertThrows(PeterException.class,
-                () -> Parser.parse("event meeting /from 2/12/2019 1700 /to 2/12/2019 0900"));
+        assertThrows(PeterException.class, () ->
+                Parser.parse("event meeting /from 2/12/2019 1700 /to 2/12/2019 0900"));
     }
 
     @Test
@@ -466,29 +466,29 @@ public class ParserTest {
     @Test
     public void parseTaskIndex_missingNumber_exceptionThrown() {
         // The message names the action, so it must adapt to each command word.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("mark", 5));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("mark", 5));
         assertEquals("Oh dear! Please provide a task number to mark.", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_missingNumberForDelete_actionNamedInMessage() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("delete", 5));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("delete", 5));
         assertEquals("Oh dear! Please provide a task number to delete.", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_missingNumberForUnmark_actionNamedInMessage() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("unmark", 5));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("unmark", 5));
         assertEquals("Oh dear! Please provide a task number to unmark.", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_emptyList_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("mark 1", 0));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("mark 1", 0));
         assertEquals("Oh dear! There are no tasks to mark.", exception.getMessage());
     }
 
@@ -496,15 +496,15 @@ public class ParserTest {
     public void parseTaskIndex_emptyListAndMissingNumber_missingNumberReported() {
         // Checks the order of the two guards: the missing number is reported
         // first, even though the list is also empty.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("mark", 0));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("mark", 0));
         assertEquals("Oh dear! Please provide a task number to mark.", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_numberBelowRange_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("mark 0", 5));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("mark 0", 5));
         assertEquals("Oh dear! Task number must be between 1 and 5.", exception.getMessage());
     }
 
@@ -516,15 +516,15 @@ public class ParserTest {
     @Test
     public void parseTaskIndex_numberAboveRange_exceptionThrown() {
         // Just past the end: the classic off-by-one boundary.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("mark 6", 5));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("mark 6", 5));
         assertEquals("Oh dear! Task number must be between 1 and 5.", exception.getMessage());
     }
 
     @Test
     public void parseTaskIndex_nonNumericNumber_exceptionThrown() {
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("mark abc", 5));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("mark abc", 5));
         assertEquals("Oh dear! Please enter an integer task number to mark.",
                 exception.getMessage());
     }
@@ -538,8 +538,8 @@ public class ParserTest {
     public void parseTaskIndex_numberTooLargeForInt_exceptionThrown() {
         // An overflowing value must be reported as a bad integer rather than
         // wrapping around into a valid-looking index.
-        PeterException exception = assertThrows(PeterException.class,
-                () -> Parser.parseTaskIndex("mark 99999999999999", 5));
+        PeterException exception = assertThrows(PeterException.class, () ->
+                Parser.parseTaskIndex("mark 99999999999999", 5));
         assertEquals("Oh dear! Please enter an integer task number to mark.",
                 exception.getMessage());
     }

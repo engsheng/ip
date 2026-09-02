@@ -154,16 +154,16 @@ public class StorageTest {
     @Test
     public void load_unknownTaskType_exceptionThrown() throws IOException {
         writeDataFile("X | 0 | mystery");
-        assertEquals(invalidDataMessage(1), assertThrows(PeterException.class,
-                () -> storage.load()).getMessage());
+        assertEquals(invalidDataMessage(1), assertThrows(PeterException.class, () ->
+                storage.load()).getMessage());
     }
 
     @Test
     public void load_invalidStatusFlag_exceptionThrown() throws IOException {
         // Only "0" and "1" are valid; anything else is corrupt.
         writeDataFile("T | 2 | read book");
-        assertEquals(invalidDataMessage(1), assertThrows(PeterException.class,
-                () -> storage.load()).getMessage());
+        assertEquals(invalidDataMessage(1), assertThrows(PeterException.class, () ->
+                storage.load()).getMessage());
     }
 
     @Test
@@ -204,8 +204,8 @@ public class StorageTest {
         // The date parse failure is converted into the same user-facing
         // message rather than leaking a DateTimeParseException.
         writeDataFile("D | 0 | return book | not-a-date");
-        assertEquals(invalidDataMessage(1), assertThrows(PeterException.class,
-                () -> storage.load()).getMessage());
+        assertEquals(invalidDataMessage(1), assertThrows(PeterException.class, () ->
+                storage.load()).getMessage());
     }
 
     @Test
@@ -228,8 +228,8 @@ public class StorageTest {
         // The line number must point at the real offending line so the user
         // can find and fix it, which means counting valid lines too.
         writeDataFile("T | 0 | first", "T | 0 | second", "X | 0 | broken");
-        assertEquals(invalidDataMessage(3), assertThrows(PeterException.class,
-                () -> storage.load()).getMessage());
+        assertEquals(invalidDataMessage(3), assertThrows(PeterException.class, () ->
+                storage.load()).getMessage());
     }
 
     @Test
@@ -237,8 +237,8 @@ public class StorageTest {
         // Blank lines are skipped but still occupy a line number, so the
         // reported number matches what the user sees in an editor.
         writeDataFile("", "X | 0 | broken");
-        assertEquals(invalidDataMessage(2), assertThrows(PeterException.class,
-                () -> storage.load()).getMessage());
+        assertEquals(invalidDataMessage(2), assertThrows(PeterException.class, () ->
+                storage.load()).getMessage());
     }
 
     // =====================================================================

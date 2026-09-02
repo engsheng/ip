@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'checkstyle'
     id 'com.gradleup.shadow' version '9.5.1'
 }
 
@@ -11,6 +12,13 @@ java {
 
 repositories {
     mavenCentral()
+}
+
+// Enforces the se-education.org intermediate Java coding standard.
+// The rules live in config/checkstyle/checkstyle.xml, with per-file
+// exceptions in config/checkstyle/suppressions.xml.
+checkstyle {
+    toolVersion = '14.1.0'
 }
 
 dependencies {
