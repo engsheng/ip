@@ -103,9 +103,11 @@ public class EventTest {
 
     @Test
     public void occursOn_backwardsEvent_falseReturned() {
-        // The parser does not reject an event whose end precedes its start, so
-        // this records what happens: the range is empty and matches nothing,
-        // including the two dates the user actually typed.
+        // Parser now rejects a backwards event, but the constructor itself
+        // does not validate order, so this records why that guard matters:
+        // the range is empty and matches nothing, including the two dates the
+        // user actually typed. Such data can still reach here from a
+        // hand-edited save file.
         Event backwards = new Event("camp",
                 LocalDateTime.of(2019, 12, 5, 0, 0),
                 LocalDateTime.of(2019, 12, 2, 0, 0));

@@ -176,7 +176,8 @@ ____________________________________________________________
 ## Test case: reject malformed event commands
 
 **Aim:** Verify that an event command requires `/from` and `/to` in order,
-along with a description, start date, and end date.
+along with a description, start date, and end date, and that the end date is
+not allowed to fall before the start date.
 
 **Command:**
 
@@ -198,6 +199,9 @@ event /from noon /to 1pm
 event meeting /from /to 1pm
 event meeting /from noon /to
 event meeting /to 1pm /from noon
+event camp /from 2019-12-05 /to 2019-12-02
+event camp /from 2019-12-02 /to 2019-12-02
+list
 bye
 ```
 
@@ -227,6 +231,18 @@ Please include an end date after '/to'.
 ____________________________________________________________
 ____________________________________________________________
 Use 'event <description> /from <start-date> /to <end-date>'.
+____________________________________________________________
+____________________________________________________________
+Please make sure the end date is not before the start date.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] camp (from: Dec 2 2019 to: Dec 2 2019)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[E][ ] camp (from: Dec 2 2019 to: Dec 2 2019)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -985,13 +1001,13 @@ Yo! I'm Peter.
 What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
-Oh dear!Task details cannot contain ' | '.
+Oh dear! Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
-Oh dear!Task details cannot contain ' | '.
+Oh dear! Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
-Oh dear!Task details cannot contain ' | '.
+Oh dear! Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:

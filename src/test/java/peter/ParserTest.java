@@ -199,7 +199,7 @@ public class ParserTest {
         // description would corrupt the file and break the next load.
         PeterException exception = assertThrows(PeterException.class,
                 () -> Parser.parse("todo read | book"));
-        assertEquals("Oh dear!Task details cannot contain ' | '.", exception.getMessage());
+        assertEquals("Oh dear! Task details cannot contain ' | '.", exception.getMessage());
     }
 
     @Test
@@ -362,12 +362,38 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_eventEndingBeforeStart_taskCreated() throws PeterException {
-        // Documents a gap rather than asserting desired behaviour: the parser
-        // does not check that the start is before the end, so a backwards
-        // event is accepted today.
-        assertEquals("E | 0 | camp | 2019-12-05T00:00 | 2019-12-02T00:00",
-                parseToTask("event camp /from 2019-12-05 /to 2019-12-02").toDataString());
+    public void parse_eventEndingBeforeStart_exceptionThrown() {
+        // Such an event would cover no dates and so could never be found
+        // again under 'on', which is why it is rejected at parse time.
+        PeterException exception = assertThrows(PeterException.class,
+                () -> Parser.parse("event camp /from 2019-12-05 /to 2019-12-02"));
+        assertEquals("Please make sure the end date is not before the start date.",
+                exception.getMessage());
+    }
+
+    @Test
+    public void parse_eventEndingBeforeStartOnSameDay_exceptionThrown() {
+        // The check compares times, not just dates, so a backwards event
+        // within a single day is caught too.
+        assertThrows(PeterException.class,
+                () -> Parser.parse("event meeting /from 2/12/2019 1700 /to 2/12/2019 0900"));
+    }
+
+    @Test
+    public void parse_eventStartingAndEndingAtSameInstant_taskCreated() throws PeterException {
+        // The boundary of the new check: equal start and end is a zero-length
+        // but still findable event, so it must remain allowed.
+        assertEquals("E | 0 | meeting | 2019-12-02T09:00 | 2019-12-02T09:00",
+                parseToTask("event meeting /from 2/12/2019 0900 /to 2/12/2019 0900")
+                        .toDataString());
+    }
+
+    @Test
+    public void parse_eventEndingOneMinuteAfterStart_taskCreated() throws PeterException {
+        // Just inside the allowed side of the boundary.
+        assertEquals("E | 0 | meeting | 2019-12-02T09:00 | 2019-12-02T09:01",
+                parseToTask("event meeting /from 2/12/2019 0900 /to 2/12/2019 0901")
+                        .toDataString());
     }
 
     // =====================================================================
