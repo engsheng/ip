@@ -3,6 +3,7 @@ package peter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+
 import peter.command.AddCommand;
 import peter.command.Command;
 import peter.command.DeleteCommand;
@@ -26,9 +27,9 @@ public final class Parser {
     /**
      * Turns a line of user input into the command it asks for.
      *
-     * @param command complete command entered by the user
-     * @return command ready to be executed
-     * @throws PeterException if the command is unrecognized or its arguments are invalid
+     * @param command complete command entered by the user.
+     * @return command ready to be executed.
+     * @throws PeterException if the command is unrecognized or its arguments are invalid.
      */
     public static Command parse(String command) throws PeterException {
         return switch (getCommandWord(command)) {
@@ -46,9 +47,9 @@ public final class Parser {
     /**
      * Identifies the command word while rejecting unsupported command shapes.
      *
-     * @param command complete command entered by the user
-     * @return recognized command word
-     * @throws PeterException if the command is not recognized
+     * @param command complete command entered by the user.
+     * @return recognized command word.
+     * @throws PeterException if the command is not recognized.
      */
     private static String getCommandWord(String command) throws PeterException {
         if (command.equals("bye") || command.equals("list")) {
@@ -69,9 +70,9 @@ public final class Parser {
     /**
      * Creates a task from a todo, deadline, or event command.
      *
-     * @param command complete task-creation command
-     * @return task described by the command
-     * @throws PeterException if a required field is missing or invalid
+     * @param command complete task-creation command.
+     * @return task described by the command.
+     * @throws PeterException if a required field is missing or invalid.
      */
     private static Task parseTask(String command) throws PeterException {
         return switch (getCommandWord(command)) {
@@ -86,9 +87,9 @@ public final class Parser {
     /**
      * Extracts the date requested by an {@code on} command.
      *
-     * @param command complete on command
-     * @return requested date
-     * @throws PeterException if the date is missing or invalid
+     * @param command complete on command.
+     * @return requested date.
+     * @throws PeterException if the date is missing or invalid.
      */
     private static LocalDate parseQueryDate(String command) throws PeterException {
         String dateText = command.substring("on".length()).trim();
@@ -109,10 +110,10 @@ public final class Parser {
      * <p>Called by the mark, unmark, and delete commands while they run, since
      * the checks below need the current task count.
      *
-     * @param command complete mark, unmark, or delete command
-     * @param taskCount current number of tasks
-     * @return zero-based task index
-     * @throws PeterException if the task number is missing or invalid
+     * @param command complete mark, unmark, or delete command.
+     * @param taskCount current number of tasks.
+     * @return zero-based task index.
+     * @throws PeterException if the task number is missing or invalid.
      */
     public static int parseTaskIndex(String command, int taskCount) throws PeterException {
         String action = getCommandWord(command);

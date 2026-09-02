@@ -20,7 +20,7 @@ public class DeleteCommand extends Command {
      * the task number needs the task count, which is only known when the
      * command runs.
      *
-     * @param command complete delete command entered by the user
+     * @param command complete delete command entered by the user.
      */
     public DeleteCommand(String command) {
         this.command = command;

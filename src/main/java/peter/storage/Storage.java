@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
 import peter.PeterException;
 import peter.task.Deadline;
 import peter.task.Event;
@@ -26,7 +27,7 @@ public final class Storage {
     /**
      * Creates storage backed by the file at the given path.
      *
-     * @param filePath path to the task data file
+     * @param filePath path to the task data file.
      */
     public Storage(String filePath) {
         this.dataFile = Path.of(filePath);
@@ -37,8 +38,8 @@ public final class Storage {
      * Loads tasks from the data file, or returns an empty list when the file
      * does not exist yet.
      *
-     * @return tasks stored in the data file
-     * @throws PeterException if the file cannot be read or contains invalid data
+     * @return tasks stored in the data file.
+     * @throws PeterException if the file cannot be read or contains invalid data.
      */
     public ArrayList<Task> load() throws PeterException {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -113,8 +114,8 @@ public final class Storage {
     /**
      * Rewrites the data file so that it matches the current task list.
      *
-     * @param tasks tasks to save in their current order
-     * @throws PeterException if the data directory or file cannot be written
+     * @param tasks tasks to save in their current order.
+     * @throws PeterException if the data directory or file cannot be written.
      */
     public void save(List<Task> tasks) throws PeterException {
         try {

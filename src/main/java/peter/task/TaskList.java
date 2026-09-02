@@ -20,7 +20,7 @@ public class TaskList {
     /**
      * Creates a task list containing the supplied tasks in their current order.
      *
-     * @param tasks initial tasks
+     * @param tasks initial tasks.
      */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
@@ -36,8 +36,8 @@ public class TaskList {
     /**
      * Returns the task at a zero-based index.
      *
-     * @param index task index
-     * @return task at the index
+     * @param index task index.
+     * @return task at the index.
      */
     public Task get(int index) {
         return tasks.get(index);
@@ -46,7 +46,7 @@ public class TaskList {
     /**
      * Adds a task to the end of the list.
      *
-     * @param task task to add
+     * @param task task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -55,8 +55,8 @@ public class TaskList {
     /**
      * Inserts a task at an index, primarily when restoring a failed deletion.
      *
-     * @param index position at which to restore the task
-     * @param task task to insert
+     * @param index position at which to restore the task.
+     * @param task task to insert.
      */
     public void add(int index, Task task) {
         tasks.add(index, task);
@@ -65,8 +65,8 @@ public class TaskList {
     /**
      * Removes and returns the task at an index.
      *
-     * @param index task index
-     * @return removed task
+     * @param index task index.
+     * @return removed task.
      */
     public Task delete(int index) {
         return tasks.remove(index);
@@ -75,8 +75,8 @@ public class TaskList {
     /**
      * Changes whether a task is completed.
      *
-     * @param index task index
-     * @param isDone new completion status
+     * @param index task index.
+     * @param isDone new completion status.
      */
     public void setDone(int index, boolean isDone) {
         if (isDone) {
@@ -89,7 +89,7 @@ public class TaskList {
     /**
      * Provides a read-only view for saving the current tasks.
      *
-     * @return unmodifiable task list view
+     * @return unmodifiable task list view.
      */
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);

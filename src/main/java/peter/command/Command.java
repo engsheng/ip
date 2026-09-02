@@ -17,10 +17,10 @@ public abstract class Command {
     /**
      * Carries out this command.
      *
-     * @param tasks task list to read or modify
-     * @param ui UI used to report the outcome
-     * @param storage storage used to persist any change
-     * @throws PeterException if the command cannot be completed
+     * @param tasks task list to read or modify.
+     * @param ui UI used to report the outcome.
+     * @param storage storage used to persist any change.
+     * @throws PeterException if the command cannot be completed.
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException;
 
@@ -40,10 +40,10 @@ public abstract class Command {
      * lives here once. Each subclass supplies only the {@code rollback} that
      * reverses its own change.
      *
-     * @param tasks task list to save
-     * @param storage storage to save into
-     * @param rollback action that reverses the change just made
-     * @throws PeterException if saving fails, after the rollback has run
+     * @param tasks task list to save.
+     * @param storage storage to save into.
+     * @param rollback action that reverses the change just made.
+     * @throws PeterException if saving fails, after the rollback has run.
      */
     protected static void saveOrRollback(TaskList tasks, Storage storage, Runnable rollback)
             throws PeterException {
