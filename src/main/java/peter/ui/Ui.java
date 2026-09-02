@@ -2,6 +2,7 @@ package peter.ui;
 
 import java.time.LocalDate;
 import java.util.Scanner;
+
 import peter.task.ScheduleDateTime;
 import peter.task.Task;
 import peter.task.TaskList;
@@ -76,7 +77,7 @@ public class Ui {
     /**
      * Displays every task with its one-based list number.
      *
-     * @param tasks tasks to display
+     * @param tasks tasks to display.
      */
     public void showTaskList(TaskList tasks) {
         System.out.println("Here are the tasks in your list:");
@@ -88,8 +89,8 @@ public class Ui {
     /**
      * Confirms that a task was added and reports the new task count.
      *
-     * @param task task that was added
-     * @param taskCount number of tasks after the addition
+     * @param task task that was added.
+     * @param taskCount number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
         System.out.println("Got it. I've added this task:");
@@ -100,8 +101,8 @@ public class Ui {
     /**
      * Confirms that a task was removed and reports the new task count.
      *
-     * @param task task that was removed
-     * @param taskCount number of tasks after the removal
+     * @param task task that was removed.
+     * @param taskCount number of tasks after the removal.
      */
     public void showRemovedTask(Task task, int taskCount) {
         System.out.println("Noted. I've removed this task:");
@@ -112,8 +113,8 @@ public class Ui {
     /**
      * Confirms a change to a task's completion status.
      *
-     * @param task task whose status changed
-     * @param isDone new completion status
+     * @param task task whose status changed.
+     * @param isDone new completion status.
      */
     public void showTaskStatusChange(Task task, boolean isDone) {
         if (isDone) {
@@ -128,23 +129,23 @@ public class Ui {
      * Displays the scheduled tasks occurring on a date, keeping their original
      * task numbers so subsequent task commands can refer to them directly.
      *
-     * @param tasks tasks to search
-     * @param date date to report on
+     * @param tasks tasks to search.
+     * @param date date to report on.
      */
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
-        boolean foundTask = false;
+        boolean hasFoundTask = false;
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
             if (task.occursOn(date)) {
-                if (!foundTask) {
+                if (!hasFoundTask) {
                     System.out.println("Here are the scheduled tasks on "
                             + ScheduleDateTime.format(date) + ":");
                 }
                 showNumberedTask(i, task);
-                foundTask = true;
+                hasFoundTask = true;
             }
         }
-        if (!foundTask) {
+        if (!hasFoundTask) {
             System.out.println("There are no scheduled tasks on "
                     + ScheduleDateTime.format(date) + ".");
         }

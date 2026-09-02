@@ -19,7 +19,7 @@ public class Peter {
     /**
      * Creates the chatbot and loads tasks from the given data file.
      *
-     * @param filePath path to the task data file
+     * @param filePath path to the task data file.
      */
     public Peter(String filePath) {
         this.storage = new Storage(filePath);

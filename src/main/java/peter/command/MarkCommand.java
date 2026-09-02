@@ -21,8 +21,8 @@ public class MarkCommand extends Command {
      * the task number needs the task count, which is only known when the
      * command runs.
      *
-     * @param command complete mark or unmark command entered by the user
-     * @param isDone status to apply to the task
+     * @param command complete mark or unmark command entered by the user.
+     * @param isDone status to apply to the task.
      */
     public MarkCommand(String command, boolean isDone) {
         this.command = command;
@@ -32,9 +32,9 @@ public class MarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());
-        boolean previousStatus = tasks.get(taskIndex).isDone();
+        boolean wasDone = tasks.get(taskIndex).isDone();
         tasks.setDone(taskIndex, isDone);
-        saveOrRollback(tasks, storage, () -> tasks.setDone(taskIndex, previousStatus));
+        saveOrRollback(tasks, storage, () -> tasks.setDone(taskIndex, wasDone));
         ui.showTaskStatusChange(tasks.get(taskIndex), isDone);
     }
 }

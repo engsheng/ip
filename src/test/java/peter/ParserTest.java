@@ -1,10 +1,10 @@
 package peter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -522,9 +522,9 @@ public class ParserTest {
      * Storage is pointed at a temporary directory and console output is
      * discarded, so this stays a check on parsing rather than on the UI.
      *
-     * @param command task-creation command to parse
-     * @return the task the parser produced
-     * @throws PeterException if the command is invalid
+     * @param command task-creation command to parse.
+     * @return the task the parser produced.
+     * @throws PeterException if the command is invalid.
      */
     private Task parseToTask(String command) throws PeterException {
         Command parsedCommand = Parser.parse(command);

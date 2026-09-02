@@ -1,6 +1,7 @@
 package peter.command;
 
 import java.time.LocalDate;
+
 import peter.storage.Storage;
 import peter.task.TaskList;
 import peter.ui.Ui;
@@ -14,7 +15,7 @@ public class FindOnDateCommand extends Command {
     /**
      * Creates a command that reports the tasks scheduled on a date.
      *
-     * @param date date to report on
+     * @param date date to report on.
      */
     public FindOnDateCommand(LocalDate date) {
         this.date = date;

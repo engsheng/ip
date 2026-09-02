@@ -37,7 +37,7 @@ public abstract class Task {
     /**
      * Converts this task into the line format used in the data file.
      *
-     * @return the serialized task
+     * @return the serialized task.
      */
     public abstract String toDataString();
 
@@ -45,8 +45,8 @@ public abstract class Task {
      * Checks whether this task is scheduled on a given date. Tasks without a
      * schedule return {@code false}; scheduled task types override this method.
      *
-     * @param date date to check
-     * @return whether the task occurs on the date
+     * @param date date to check.
+     * @return whether the task occurs on the date.
      */
     public boolean occursOn(LocalDate date) {
         return false;
