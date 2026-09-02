@@ -57,8 +57,23 @@ After every code update:
    console-session record in the handoff. If the plan cannot be run, state why
    and do not claim that UI testing passed.
 
-## Git
+## Git (mandatory)
+
+All commits, branches, and tags must follow the se-education.org Git
+convention, captured in the `seedu-git-standard` skill
+(`.claude/skills/seedu-git-standard/SKILL.md`).
+
+* Invoke the `seedu-git-standard` skill **before** writing any commit message,
+  proposing a commit, naming a branch, or creating a tag. Do not rely on
+  memory of the rules.
+* This applies to every commit, however small.
+* Points most often missed: the subject must be imperative, capitalised, free
+  of a trailing period, and under 50 characters where possible (72 hard
+  limit); the body wraps at 72 characters and follows the five-paragraph
+  structure ending with any other relevant info; and the body explains what
+  and why, never how.
 
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
-Do not commit or push unless explicitly asked.
+Do not commit or push unless explicitly asked. Hand the message text to the
+user to commit themselves.
