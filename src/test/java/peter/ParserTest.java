@@ -17,6 +17,7 @@ import peter.command.AddCommand;
 import peter.command.Command;
 import peter.command.DeleteCommand;
 import peter.command.ExitCommand;
+import peter.command.FindCommand;
 import peter.command.FindOnDateCommand;
 import peter.command.ListCommand;
 import peter.command.MarkCommand;
@@ -168,6 +169,46 @@ public class ParserTest {
     @Test
     public void parse_onCommandWithImpossibleDate_exceptionThrown() {
         assertThrows(PeterException.class, () -> Parser.parse("on 2019-02-30"));
+    }
+
+    // =====================================================================
+    // parse(String): "find" keyword
+    // =====================================================================
+
+    @Test
+    public void parse_findCommand_findCommandReturned() throws PeterException {
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
+    }
+
+    @Test
+    public void parse_findCommandWithoutKeyword_exceptionThrown() {
+        PeterException exception = assertThrows(PeterException.class,
+                () -> Parser.parse("find"));
+        assertEquals("Use 'find <keyword>' (e.g., find book).", exception.getMessage());
+    }
+
+    @Test
+    public void parse_findCommandWithBlankKeyword_exceptionThrown() {
+        // The keyword is trimmed, so whitespace counts as missing.
+        assertThrows(PeterException.class, () -> Parser.parse("find    "));
+    }
+
+    @Test
+    public void parse_findCommandWithSurroundingSpaces_keywordAccepted() throws PeterException {
+        assertInstanceOf(FindCommand.class, Parser.parse("find   book  "));
+    }
+
+    @Test
+    public void parse_findCommandWithMultiWordKeyword_keywordAccepted() throws PeterException {
+        // Everything after "find" is one search term, so an inner space is
+        // kept rather than splitting into several keywords.
+        assertInstanceOf(FindCommand.class, Parser.parse("find read book"));
+    }
+
+    @Test
+    public void parse_findAsPrefixOfAnotherWord_exceptionThrown() {
+        // "finder" must not be accepted as "find".
+        assertThrows(PeterException.class, () -> Parser.parse("finder"));
     }
 
     // =====================================================================

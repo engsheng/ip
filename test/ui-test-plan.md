@@ -442,6 +442,84 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: find tasks by keyword
+
+**Aim:** Verify that `find` matches a keyword anywhere in a task description
+regardless of case, keeps original task numbers, reports when nothing matches,
+and rejects a missing keyword.
+
+**Command:**
+
+```text
+$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
+New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
+javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+$uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
+New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
+$uiTestDataFile = Join-Path $uiTestDataDirectory 'peter.txt'
+$uiTestData = @(
+    'T | 1 | read book',
+    'D | 1 | return book | 2019-06-06T00:00',
+    'E | 0 | book fair | 2019-08-06T00:00 | 2019-08-07T00:00',
+    'T | 0 | buy milk'
+)
+$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
+Set-Location $uiTestRunDirectory
+java -cp $uiTestBuildDirectory peter.Peter
+```
+
+**Inputs:**
+
+```text
+find
+find book
+find BOOK
+find milk
+find homework
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Yo! I'm Peter.
+What crazy adventures are we making today?
+____________________________________________________________
+____________________________________________________________
+Use 'find <keyword>' (e.g., find book).
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][X] return book (by: Jun 6 2019)
+3.[E][ ] book fair (from: Aug 6 2019 to: Aug 7 2019)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][X] return book (by: Jun 6 2019)
+3.[E][ ] book fair (from: Aug 6 2019 to: Aug 7 2019)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+4.[T][ ] buy milk
+____________________________________________________________
+____________________________________________________________
+There are no matching tasks in your list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: reject an unknown command
 
 **Aim:** Verify that an unknown command displays a helpful error and is not

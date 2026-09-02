@@ -66,6 +66,63 @@ public class TodoTest {
     }
 
     // =====================================================================
+    // hasKeyword(String): the inherited keyword search
+    // =====================================================================
+
+    @Test
+    public void hasKeyword_keywordInDescription_trueReturned() {
+        assertTrue(new Todo("read book").hasKeyword("book"));
+    }
+
+    @Test
+    public void hasKeyword_keywordAbsent_falseReturned() {
+        assertFalse(new Todo("read book").hasKeyword("homework"));
+    }
+
+    @Test
+    public void hasKeyword_differentCase_trueReturned() {
+        // Searching is case-insensitive, so the user need not match the
+        // capitalisation they originally typed.
+        Todo todo = new Todo("Read Book");
+        assertTrue(todo.hasKeyword("book"));
+        assertTrue(todo.hasKeyword("BOOK"));
+        assertTrue(todo.hasKeyword("bOoK"));
+    }
+
+    @Test
+    public void hasKeyword_partialWord_trueReturned() {
+        // Matching is on any substring, not whole words.
+        assertTrue(new Todo("read bookshop sign").hasKeyword("book"));
+        assertTrue(new Todo("read book").hasKeyword("oo"));
+    }
+
+    @Test
+    public void hasKeyword_wholeDescription_trueReturned() {
+        assertTrue(new Todo("read book").hasKeyword("read book"));
+    }
+
+    @Test
+    public void hasKeyword_keywordLongerThanDescription_falseReturned() {
+        assertFalse(new Todo("book").hasKeyword("read book"));
+    }
+
+    @Test
+    public void hasKeyword_emptyKeyword_trueReturned() {
+        // Every string contains the empty string. Parser rejects a blank
+        // keyword before this point, so this only documents the behaviour.
+        assertTrue(new Todo("read book").hasKeyword(""));
+    }
+
+    @Test
+    public void hasKeyword_keywordWithSpaces_matchedLiterally() {
+        // A multi-word keyword is one search term, so it must appear
+        // contiguously rather than as separate words.
+        Todo todo = new Todo("read a book");
+        assertTrue(todo.hasKeyword("a book"));
+        assertFalse(todo.hasKeyword("read book"));
+    }
+
+    // =====================================================================
     // Completion status, inherited from Task
     // =====================================================================
 

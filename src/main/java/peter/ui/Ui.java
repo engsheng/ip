@@ -150,6 +150,31 @@ public class Ui {
         }
     }
 
+    /**
+     * Displays the tasks whose descriptions contain a keyword, keeping their
+     * original task numbers so subsequent task commands can refer to them
+     * directly.
+     *
+     * @param tasks tasks to search.
+     * @param keyword keyword to search descriptions for.
+     */
+    public void showMatchingTasks(TaskList tasks, String keyword) {
+        boolean hasFoundTask = false;
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task.hasKeyword(keyword)) {
+                if (!hasFoundTask) {
+                    System.out.println("Here are the matching tasks in your list:");
+                }
+                showNumberedTask(i, task);
+                hasFoundTask = true;
+            }
+        }
+        if (!hasFoundTask) {
+            System.out.println("There are no matching tasks in your list.");
+        }
+    }
+
     /** Displays a task prefixed by its one-based list number. */
     private void showNumberedTask(int index, Task task) {
         System.out.println((index + 1) + "." + formatTask(task));
