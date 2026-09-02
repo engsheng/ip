@@ -21,6 +21,13 @@ public class AddCommand extends Command {
         this.task = task;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Adds the task, then saves. The task is only reported to the user
+     * once the save succeeds, so a failed save removes it again rather than
+     * confirming an addition that was never stored.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException {
         tasks.add(task);
