@@ -8,6 +8,7 @@ import peter.command.AddCommand;
 import peter.command.Command;
 import peter.command.DeleteCommand;
 import peter.command.ExitCommand;
+import peter.command.FindCommand;
 import peter.command.FindOnDateCommand;
 import peter.command.ListCommand;
 import peter.command.MarkCommand;
@@ -36,6 +37,7 @@ public final class Parser {
             case "bye" -> new ExitCommand();
             case "list" -> new ListCommand();
             case "on" -> new FindOnDateCommand(parseQueryDate(command));
+            case "find" -> new FindCommand(parseKeyword(command));
             case "todo", "deadline", "event" -> new AddCommand(parseTask(command));
             case "mark" -> new MarkCommand(command, true);
             case "unmark" -> new MarkCommand(command, false);
@@ -57,7 +59,7 @@ public final class Parser {
         }
 
         String[] commandsWithArguments = {
-            "on", "todo", "deadline", "event", "mark", "unmark", "delete"
+            "on", "find", "todo", "deadline", "event", "mark", "unmark", "delete"
         };
         for (String commandWord : commandsWithArguments) {
             if (command.equals(commandWord) || command.startsWith(commandWord + " ")) {
@@ -102,6 +104,24 @@ public final class Parser {
             throw new PeterException(
                     "Please enter the date in yyyy-MM-dd format (e.g., 2019-12-02).", e);
         }
+    }
+
+    /**
+     * Extracts the keyword requested by a {@code find} command.
+     *
+     * <p>The keyword is not checked against the storage delimiter, since a
+     * search term is never written to the data file.
+     *
+     * @param command complete find command.
+     * @return keyword to search descriptions for.
+     * @throws PeterException if the keyword is missing.
+     */
+    private static String parseKeyword(String command) throws PeterException {
+        String keyword = command.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new PeterException("Use 'find <keyword>' (e.g., find book).");
+        }
+        return keyword;
     }
 
     /**

@@ -1,6 +1,7 @@
 package peter.task;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 /**
  * Represents a task tracked by Peter.
@@ -50,6 +51,22 @@ public abstract class Task {
      */
     public boolean occursOn(LocalDate date) {
         return false;
+    }
+
+    /**
+     * Returns whether this task's description contains the given keyword,
+     * ignoring case.
+     *
+     * <p>Only the description is searched, so a keyword matching a task's
+     * dates or type icon does not count. Matching is on any substring rather
+     * than whole words, so {@code book} also finds {@code bookshop}.
+     *
+     * @param keyword keyword to look for.
+     * @return whether the description contains the keyword.
+     */
+    public boolean hasKeyword(String keyword) {
+        return description.toLowerCase(Locale.ROOT)
+                .contains(keyword.toLowerCase(Locale.ROOT));
     }
 
     public void markAsDone() {

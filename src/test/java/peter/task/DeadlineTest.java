@@ -71,6 +71,23 @@ public class DeadlineTest {
     }
 
     // =====================================================================
+    // hasKeyword(String)
+    // =====================================================================
+
+    @Test
+    public void hasKeyword_keywordInDescription_trueReturned() {
+        assertTrue(eveningDeadline().hasKeyword("book"));
+    }
+
+    @Test
+    public void hasKeyword_keywordOnlyInDueDate_falseReturned() {
+        // Only the description is searched. A deadline due in 2019 must not
+        // be found by searching for "2019", or every dated task would match.
+        assertFalse(eveningDeadline().hasKeyword("2019"));
+        assertFalse(eveningDeadline().hasKeyword("Dec"));
+    }
+
+    // =====================================================================
     // toDataString()
     // =====================================================================
 
