@@ -66,7 +66,10 @@ test {
 }
 
 application {
-    mainClass = 'peter.Peter'
+    // The launcher, not the Application subclass: a main class extending
+    // Application cannot start with JavaFX on the classpath. The console UI
+    // is still reachable by running peter.Peter directly.
+    mainClass = 'peter.gui.Launcher'
 }
 
 jar {

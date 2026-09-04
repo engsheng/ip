@@ -3,6 +3,12 @@
 Use this file with the `$test-ui` skill. Each command starts a fresh instance
 of the program.
 
+These cases cover the console interface only. Run each from the project root:
+the sources are compiled with Gradle rather than a bare `javac`, because the
+graphical classes need JavaFX on the compile classpath and only Gradle knows
+where those jars are. The console entry point itself needs no JavaFX, so it
+still runs from a plain classpath.
+
 ## Test case: reject an empty todo description
 
 **Aim:** Verify that an empty `todo` command displays a helpful error and the
@@ -11,9 +17,8 @@ program continues to accept the next command.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -55,9 +60,8 @@ data file with a byte-order mark and retain their saved completion statuses.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
 New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
@@ -111,9 +115,8 @@ out-of-range task numbers without ending the program.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -182,9 +185,8 @@ not allowed to fall before the start date.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -257,9 +259,8 @@ description, and a due date, while allowing the program to continue afterward.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -309,9 +310,8 @@ date-times, display them clearly, and reject malformed or impossible values.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -376,9 +376,8 @@ unmatched dates.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
 New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
@@ -451,9 +450,8 @@ and rejects a missing keyword.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
 New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
@@ -528,9 +526,8 @@ added to the task list.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -572,9 +569,8 @@ details, updates the task count, and renumbers the remaining tasks.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -642,9 +638,8 @@ task numbers, handles an empty list, and continues accepting commands.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -718,9 +713,8 @@ the updated status, and that deleting a completed task preserves its status.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -795,9 +789,8 @@ rejected instead of being accepted as meaningful task details.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -847,9 +840,8 @@ expected console interaction while each successful change is saved silently.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
@@ -916,9 +908,8 @@ startup gracefully without displaying a Java exception.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataDirectory = Join-Path $uiTestRunDirectory 'data'
 New-Item -ItemType Directory -Force -Path $uiTestDataDirectory | Out-Null
@@ -959,9 +950,8 @@ helpful message and stops startup gracefully.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataPath = Join-Path $uiTestRunDirectory 'data\peter.txt'
 New-Item -ItemType Directory -Force -Path $uiTestDataPath | Out-Null
@@ -998,9 +988,8 @@ chatbot running, and does not leave an unsaved task in memory.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 New-Item -ItemType File -Path (Join-Path $uiTestRunDirectory 'data') | Out-Null
@@ -1047,9 +1036,8 @@ therefore cannot create records that fail during the next startup.
 **Command:**
 
 ```text
-$uiTestBuildDirectory = Join-Path $env:TEMP 'peter-ui-test'
-New-Item -ItemType Directory -Force -Path $uiTestBuildDirectory | Out-Null
-javac -d $uiTestBuildDirectory (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
