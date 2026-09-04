@@ -1,5 +1,6 @@
 package peter.ui;
 
+import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -8,7 +9,11 @@ import peter.task.Task;
 import peter.task.TaskList;
 
 /**
- * Handles the application's basic console input and output.
+ * Handles the application's basic input and output.
+ *
+ * <p>Output goes to an injected stream rather than directly to
+ * {@code System.out}, so a caller that needs the text of a response can
+ * supply a buffer instead of the console.
  */
 public class Ui {
     private static final String DIVIDER =
@@ -19,59 +24,88 @@ public class Ui {
             + "|  __/  __/ ||  __/ |\n"
             + "|_|   \\___|\\__\\___|_|\n";
 
-    private final Scanner scanner;
+    private final PrintStream out;
+
+    /** Created on first use, since a UI that only writes never reads a command. */
+    private Scanner scanner;
 
     /**
-     * Creates a UI that reads commands from standard input.
+     * Creates a UI that reads commands from standard input and writes to
+     * standard output.
      */
     public Ui() {
-        this.scanner = new Scanner(System.in);
+        this(System.out);
     }
 
     /**
-     * Displays the application's greeting.
+     * Creates a UI that writes to the given stream.
+     *
+     * @param out stream to write all output to.
+     */
+    public Ui(PrintStream out) {
+        this.out = out;
+    }
+
+    /**
+     * Displays the application's full console welcome, banner included.
      */
     public void showWelcome() {
         showDivider();
-        System.out.print(BANNER);
-        System.out.println("Yo! I'm Peter.");
-        System.out.println("What crazy adventures are we making today?");
+        out.print(BANNER);
+        showGreeting();
         showDivider();
+    }
+
+    /**
+     * Displays the greeting on its own, without the banner or dividers that
+     * only suit a console.
+     */
+    public void showGreeting() {
+        out.println("Yo! I'm Peter.");
+        out.println("What crazy adventures are we making today?");
     }
 
     /**
      * Returns whether another command is available from the user.
      */
     public boolean hasNextCommand() {
-        return scanner.hasNextLine();
+        return getScanner().hasNextLine();
     }
 
     /**
      * Reads the next command entered by the user.
      */
     public String readCommand() {
-        return scanner.nextLine();
+        return getScanner().nextLine();
+    }
+
+    /** Returns the scanner over standard input, creating it if needed. */
+    private Scanner getScanner() {
+        if (scanner == null) {
+            scanner = new Scanner(System.in);
+        }
+        return scanner;
     }
 
     /**
      * Displays the application's farewell message.
      */
     public void showGoodbye() {
-        System.out.println("Bye. Hope to see you again soon!");
+        out.println("Bye. Hope to see you again soon!");
     }
 
     /**
      * Displays an error message without exposing implementation details.
      */
     public void showError(String message) {
-        System.out.println(message);
+        out.println(message);
     }
 
     /**
      * Displays the divider used to separate console interactions.
      */
     public void showDivider() {
-        System.out.println(DIVIDER);
+        out.println(DIVIDER);
     }
 
     /**
@@ -80,7 +114,7 @@ public class Ui {
      * @param tasks tasks to display.
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println("Here are the tasks in your list:");
+        out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             showNumberedTask(i, tasks.get(i));
         }
@@ -93,8 +127,8 @@ public class Ui {
      * @param taskCount number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + formatTask(task));
+        out.println("Got it. I've added this task:");
+        out.println("  " + formatTask(task));
         showTaskCount(taskCount);
     }
 
@@ -105,8 +139,8 @@ public class Ui {
      * @param taskCount number of tasks after the removal.
      */
     public void showRemovedTask(Task task, int taskCount) {
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + formatTask(task));
+        out.println("Noted. I've removed this task:");
+        out.println("  " + formatTask(task));
         showTaskCount(taskCount);
     }
 
@@ -118,11 +152,11 @@ public class Ui {
      */
     public void showTaskStatusChange(Task task, boolean isDone) {
         if (isDone) {
-            System.out.println("Nice! I've marked this task as done:");
+            out.println("Nice! I've marked this task as done:");
         } else {
-            System.out.println("OK, I've marked this task as not done yet:");
+            out.println("OK, I've marked this task as not done yet:");
         }
-        System.out.println("  [" + task.getStatusIcon() + "] " + task.getDescription());
+        out.println("  [" + task.getStatusIcon() + "] " + task.getDescription());
     }
 
     /**
@@ -138,7 +172,7 @@ public class Ui {
             Task task = tasks.get(i);
             if (task.occursOn(date)) {
                 if (!hasFoundTask) {
-                    System.out.println("Here are the scheduled tasks on "
+                    out.println("Here are the scheduled tasks on "
                             + ScheduleDateTime.format(date) + ":");
                 }
                 showNumberedTask(i, task);
@@ -146,7 +180,7 @@ public class Ui {
             }
         }
         if (!hasFoundTask) {
-            System.out.println("There are no scheduled tasks on "
+            out.println("There are no scheduled tasks on "
                     + ScheduleDateTime.format(date) + ".");
         }
     }
@@ -165,25 +199,25 @@ public class Ui {
             Task task = tasks.get(i);
             if (task.hasKeyword(keyword)) {
                 if (!hasFoundTask) {
-                    System.out.println("Here are the matching tasks in your list:");
+                    out.println("Here are the matching tasks in your list:");
                 }
                 showNumberedTask(i, task);
                 hasFoundTask = true;
             }
         }
         if (!hasFoundTask) {
-            System.out.println("There are no matching tasks in your list.");
+            out.println("There are no matching tasks in your list.");
         }
     }
 
     /** Displays a task prefixed by its one-based list number. */
     private void showNumberedTask(int index, Task task) {
-        System.out.println((index + 1) + "." + formatTask(task));
+        out.println((index + 1) + "." + formatTask(task));
     }
 
     /** Reports how many tasks the list now holds. */
     private void showTaskCount(int taskCount) {
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
+        out.println("Now you have " + taskCount + " tasks in the list.");
     }
 
     /**

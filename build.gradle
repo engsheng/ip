@@ -5,9 +5,14 @@ plugins {
     id 'com.gradleup.shadow' version '9.5.1'
 }
 
+// A toolchain makes Gradle locate a Java 25 JDK to compile and run with,
+// rather than assuming the JDK that launched Gradle is already Java 25.
+// This keeps IDE-launched builds working even when the IDE starts Gradle
+// on an older JDK.
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 repositories {
@@ -23,6 +28,22 @@ checkstyle {
 
 dependencies {
     String jUnitVersion = '5.14.4'
+    String javaFxVersion = '17.0.7'
+
+    // All three platform classifiers are declared so the shadowJar runs on any
+    // desktop OS, not just the machine that built it.
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:linux")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:linux")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:linux")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:linux")
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
 
@@ -45,7 +66,10 @@ test {
 }
 
 application {
-    mainClass = 'peter.Peter'
+    // The launcher, not the Application subclass: a main class extending
+    // Application cannot start with JavaFX on the classpath. The console UI
+    // is still reachable by running peter.Peter directly.
+    mainClass = 'peter.gui.Launcher'
 }
 
 jar {
