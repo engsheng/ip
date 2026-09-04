@@ -9,6 +9,11 @@ graphical classes need JavaFX on the compile classpath and only Gradle knows
 where those jars are. The console entry point itself needs no JavaFX, so it
 still runs from a plain classpath.
 
+The graphical interface is covered by the manual checklist at the end of this
+file. It is deliberately short: the two front ends share all of their logic, so
+the console cases above already exercise the behaviour, and only what is
+genuinely specific to the window needs checking by hand.
+
 ## Test case: reject an empty todo description
 
 **Aim:** Verify that an empty `todo` command displays a helpful error and the
@@ -1082,3 +1087,27 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+# Manual GUI Checklist
+
+The graphical interface cannot be driven by piping text at it, so these are
+checked by hand. Start each one with `./gradlew run` from the project root, or
+`java -jar build/libs/peter.jar` when checking a release.
+
+Run these after any change under `src/main/java/peter/gui` or
+`src/main/resources`. Changes to the task, parser or storage code are covered
+by the console cases above.
+
+| # | Check | Expected |
+|---|---|---|
+| 1 | Open the window | A window titled "Peter" appears and greets you. No banner or divider lines: those belong to the console. |
+| 2 | Type `list` and press Enter | Your command appears on the right with your picture; the reply appears on the left with Peter's. The input box clears. |
+| 3 | Click **Send** with text in the box | Behaves exactly as pressing Enter did. |
+| 4 | Press Enter on an empty box | Nothing is added to the transcript. |
+| 5 | Add a task with a very long description, then `list` | The reply wraps onto several lines. No text is cut off at the right edge. |
+| 6 | Keep sending commands until the transcript overflows | The view follows the newest message; you never have to scroll down by hand. |
+| 7 | Resize the window narrower | Existing bubbles re-wrap. The input box and Send button stay at the bottom. |
+| 8 | Type `bye` | The farewell appears, the input box and Send button grey out, and the window closes about a second later. |
+| 9 | Corrupt `data/peter.txt` (e.g. change a status field to `maybe`) and restart | The greeting is followed by an error naming the bad line, and both controls are disabled so no command can overwrite the file. |
+| 10 | Delete `data/peter.txt` and restart | Peter greets you with an empty list and no error. A missing file is not a failure. |
+| 11 | Run the jar from an empty folder | The window opens; a `data` folder is created there on the first change, not at startup. |
