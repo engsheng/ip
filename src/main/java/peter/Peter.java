@@ -1,5 +1,10 @@
 package peter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
+
 import peter.command.Command;
 import peter.storage.Storage;
 import peter.task.TaskList;
@@ -15,6 +20,9 @@ public class Peter {
 
     /** Loading failure retained so it can be displayed after the welcome message. */
     private final PeterException loadingError;
+
+    /** Set once a command asks the application to stop. */
+    private boolean isExitRequested;
 
     /**
      * Creates the chatbot and loads tasks from the given data file.
@@ -64,6 +72,78 @@ public class Peter {
                 ui.showDivider();
             }
         }
+    }
+
+    /**
+     * Returns the greeting to show when the chatbot starts.
+     *
+     * <p>Unlike the console welcome, this omits the banner and dividers, which
+     * only make sense in a fixed-width terminal.
+     *
+     * @return greeting text.
+     */
+    public String getGreeting() {
+        return capture(Ui::showGreeting);
+    }
+
+    /**
+     * Returns whether the saved tasks failed to load at startup.
+     */
+    public boolean hasLoadingError() {
+        return loadingError != null;
+    }
+
+    /**
+     * Returns the message explaining why the saved tasks could not be loaded.
+     *
+     * @return loading error message, or an empty string if loading succeeded.
+     */
+    public String getLoadingErrorMessage() {
+        return hasLoadingError() ? loadingError.getMessage() : "";
+    }
+
+    /**
+     * Runs one command and returns what it would have printed.
+     *
+     * <p>This is the entry point for a caller that displays responses itself,
+     * such as a graphical interface. Errors are reported in the returned text
+     * rather than thrown, so every input produces something to display.
+     *
+     * @param input complete command entered by the user.
+     * @return text of the response.
+     */
+    public String getResponse(String input) {
+        return capture(ui -> {
+            try {
+                Command command = Parser.parse(input);
+                command.execute(tasks, ui, storage);
+                isExitRequested = command.isExit();
+            } catch (PeterException e) {
+                ui.showError(e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Returns whether the last command executed asked the application to stop.
+     */
+    public boolean isExitRequested() {
+        return isExitRequested;
+    }
+
+    /**
+     * Runs a UI action against a buffer and returns everything it wrote.
+     *
+     * <p>The buffer is read back as UTF-8 so that the captured text does not
+     * depend on the platform's default character encoding.
+     *
+     * @param action action to perform on the buffering UI.
+     * @return captured text, without its trailing newline.
+     */
+    private static String capture(Consumer<Ui> action) {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        action.accept(new Ui(new PrintStream(buffer, true, StandardCharsets.UTF_8)));
+        return buffer.toString(StandardCharsets.UTF_8).stripTrailing();
     }
 
     /**
