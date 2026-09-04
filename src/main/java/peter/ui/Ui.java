@@ -61,8 +61,8 @@ public class Ui {
      * only suit a console.
      */
     public void showGreeting() {
-        out.println("Yo! I'm Peter.");
-        out.println("What crazy adventures are we making today?");
+        showLines("Yo! I'm Peter.",
+                "What crazy adventures are we making today?");
     }
 
     /**
@@ -109,6 +109,18 @@ public class Ui {
     }
 
     /**
+     * Displays each of the given lines in order, one line per row.
+     *
+     * <p>Var-args keeps a multi-line message readable as a single call at the
+     * call site, instead of a run of separate print statements.
+     */
+    private void showLines(String... lines) {
+        for (String line : lines) {
+            out.println(line);
+        }
+    }
+
+    /**
      * Displays every task with its one-based list number.
      *
      * @param tasks tasks to display.
@@ -127,8 +139,8 @@ public class Ui {
      * @param taskCount number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
-        out.println("Got it. I've added this task:");
-        out.println("  " + formatTask(task));
+        showLines("Got it. I've added this task:",
+                "  " + formatTask(task));
         showTaskCount(taskCount);
     }
 
@@ -139,8 +151,8 @@ public class Ui {
      * @param taskCount number of tasks after the removal.
      */
     public void showRemovedTask(Task task, int taskCount) {
-        out.println("Noted. I've removed this task:");
-        out.println("  " + formatTask(task));
+        showLines("Noted. I've removed this task:",
+                "  " + formatTask(task));
         showTaskCount(taskCount);
     }
 
