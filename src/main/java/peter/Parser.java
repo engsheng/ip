@@ -58,15 +58,32 @@ public final class Parser {
             return command;
         }
 
-        String[] commandsWithArguments = {
-            "on", "find", "todo", "deadline", "event", "mark", "unmark", "delete"
-        };
-        for (String commandWord : commandsWithArguments) {
+        String commandWord = matchCommandWord(command,
+                "on", "find", "todo", "deadline", "event", "mark", "unmark", "delete");
+        if (commandWord == null) {
+            throw new PeterException("I'm sorry, but I don't understand that command. Please try again.");
+        }
+        return commandWord;
+    }
+
+    /**
+     * Returns the first of the given command words that the command starts
+     * with, or {@code null} if the command matches none of them.
+     *
+     * <p>The candidates are var-args so the caller can list them inline,
+     * rather than building an array only for this method to read.
+     *
+     * @param command complete command entered by the user.
+     * @param commandWords command words to test, in order of preference.
+     * @return matching command word, or {@code null} if there is none.
+     */
+    private static String matchCommandWord(String command, String... commandWords) {
+        for (String commandWord : commandWords) {
             if (command.equals(commandWord) || command.startsWith(commandWord + " ")) {
                 return commandWord;
             }
         }
-        throw new PeterException("I'm sorry, but I don't understand that command. Please try again.");
+        return null;
     }
 
     /**

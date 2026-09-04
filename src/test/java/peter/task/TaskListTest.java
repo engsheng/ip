@@ -61,6 +61,20 @@ public class TaskListTest {
         assertEquals(0, new TaskList(List.of()).size());
     }
 
+    @Test
+    public void constructor_taskArguments_tasksStoredInOrder() {
+        // The var-args constructor also has to keep an empty call working,
+        // since that is how the app starts with no saved tasks.
+        Todo first = new Todo("first");
+        Todo second = new Todo("second");
+
+        TaskList tasks = new TaskList(first, second);
+
+        assertEquals(2, tasks.size());
+        assertEquals(first, tasks.get(0));
+        assertEquals(second, tasks.get(1));
+    }
+
     // =====================================================================
     // add, get, size
     // =====================================================================
@@ -103,8 +117,8 @@ public class TaskListTest {
     public void addAtIndex_middleOfList_taskInsertedWithoutLoss() {
         // This is the rollback path: after a failed save, the deleted task
         // must return to its original position, not the end of the list.
-        TaskList tasks = new TaskList(List.of(
-                new Todo("first"), new Todo("second"), new Todo("third")));
+        TaskList tasks = new TaskList(
+                new Todo("first"), new Todo("second"), new Todo("third"));
 
         Task removed = tasks.delete(1);
         tasks.add(1, removed);
@@ -119,7 +133,7 @@ public class TaskListTest {
     public void addAtIndex_endOfList_taskAppended() {
         // Deleting the last task then rolling back inserts at size(), which
         // must be a valid position rather than out of bounds.
-        TaskList tasks = new TaskList(List.of(new Todo("first")));
+        TaskList tasks = new TaskList(new Todo("first"));
         tasks.add(1, new Todo("second"));
 
         assertEquals(2, tasks.size());
@@ -139,7 +153,7 @@ public class TaskListTest {
     @Test
     public void delete_validIndex_taskRemovedAndReturned() {
         // The removed task is returned so the UI can name what it deleted.
-        TaskList tasks = new TaskList(List.of(new Todo("first"), new Todo("second")));
+        TaskList tasks = new TaskList(new Todo("first"), new Todo("second"));
 
         Task removed = tasks.delete(0);
 
@@ -150,14 +164,14 @@ public class TaskListTest {
 
     @Test
     public void delete_lastRemainingTask_listBecomesEmpty() {
-        TaskList tasks = new TaskList(List.of(new Todo("only")));
+        TaskList tasks = new TaskList(new Todo("only"));
         tasks.delete(0);
         assertEquals(0, tasks.size());
     }
 
     @Test
     public void delete_indexOutOfBounds_exceptionThrown() {
-        TaskList tasks = new TaskList(List.of(new Todo("only")));
+        TaskList tasks = new TaskList(new Todo("only"));
         assertThrows(IndexOutOfBoundsException.class, () -> tasks.delete(1));
     }
 
@@ -167,14 +181,14 @@ public class TaskListTest {
 
     @Test
     public void setDone_markTask_taskBecomesDone() {
-        TaskList tasks = new TaskList(List.of(new Todo("first")));
+        TaskList tasks = new TaskList(new Todo("first"));
         tasks.setDone(0, true);
         assertTrue(tasks.get(0).isDone());
     }
 
     @Test
     public void setDone_unmarkTask_taskBecomesNotDone() {
-        TaskList tasks = new TaskList(List.of(new Todo("first")));
+        TaskList tasks = new TaskList(new Todo("first"));
         tasks.setDone(0, true);
         tasks.setDone(0, false);
         assertFalse(tasks.get(0).isDone());
@@ -183,8 +197,8 @@ public class TaskListTest {
     @Test
     public void setDone_oneTask_otherTasksUnchanged() {
         // Guards against the status being applied to the wrong index.
-        TaskList tasks = new TaskList(List.of(
-                new Todo("first"), new Todo("second"), new Todo("third")));
+        TaskList tasks = new TaskList(
+                new Todo("first"), new Todo("second"), new Todo("third"));
 
         tasks.setDone(1, true);
 
@@ -204,7 +218,7 @@ public class TaskListTest {
 
     @Test
     public void asList_tasksPresent_sameTasksInOrder() {
-        TaskList tasks = new TaskList(List.of(new Todo("first"), new Todo("second")));
+        TaskList tasks = new TaskList(new Todo("first"), new Todo("second"));
 
         List<Task> view = tasks.asList();
 

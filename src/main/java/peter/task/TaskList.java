@@ -11,14 +11,24 @@ public class TaskList {
     private final ArrayList<Task> tasks;
 
     /**
-     * Creates an empty task list.
+     * Creates a task list holding the given tasks in the order supplied.
+     *
+     * <p>Being var-args, this one constructor covers both an empty list
+     * ({@code new TaskList()}) and a known set of tasks
+     * ({@code new TaskList(todo, deadline)}), so a caller that already has the
+     * tasks in hand need not wrap them in a collection first.
+     *
+     * @param tasks initial tasks, in the order they should appear.
      */
-    public TaskList() {
-        this.tasks = new ArrayList<>();
+    public TaskList(Task... tasks) {
+        this.tasks = new ArrayList<>(List.of(tasks));
     }
 
     /**
      * Creates a task list containing the supplied tasks in their current order.
+     *
+     * <p>Kept alongside the var-args constructor for callers such as storage,
+     * whose tasks arrive as a collection whose size is unknown until run time.
      *
      * @param tasks initial tasks.
      */
