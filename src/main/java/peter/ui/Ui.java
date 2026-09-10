@@ -3,6 +3,7 @@ package peter.ui;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 import peter.task.ScheduleDateTime;
 import peter.task.Task;
@@ -179,22 +180,10 @@ public class Ui {
      * @param date date to report on.
      */
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
-        boolean hasFoundTask = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            if (task.occursOn(date)) {
-                if (!hasFoundTask) {
-                    out.println("Here are the scheduled tasks on "
-                            + ScheduleDateTime.format(date) + ":");
-                }
-                showNumberedTask(i, task);
-                hasFoundTask = true;
-            }
-        }
-        if (!hasFoundTask) {
-            out.println("There are no scheduled tasks on "
-                    + ScheduleDateTime.format(date) + ".");
-        }
+        String dateText = ScheduleDateTime.format(date);
+        showFilteredTasks(tasks, task -> task.occursOn(date),
+                "Here are the scheduled tasks on " + dateText + ":",
+                "There are no scheduled tasks on " + dateText + ".");
     }
 
     /**
@@ -206,19 +195,42 @@ public class Ui {
      * @param keyword keyword to search descriptions for.
      */
     public void showMatchingTasks(TaskList tasks, String keyword) {
+        showFilteredTasks(tasks, task -> task.hasKeyword(keyword),
+                "Here are the matching tasks in your list:",
+                "There are no matching tasks in your list.");
+    }
+
+    /**
+     * Displays the tasks a search selects, keeping their original task numbers
+     * so subsequent task commands can refer to them directly.
+     *
+     * <p>The heading appears only once a first match is found, so a search
+     * that selects nothing shows {@code emptyMessage} on its own. Both the
+     * {@code on} and {@code find} searches display their results this way, and
+     * differ only in the three values passed here.
+     *
+     * @param tasks tasks to search.
+     * @param isMatch test deciding whether a task is part of the result.
+     * @param heading line introducing the matches.
+     * @param emptyMessage line shown instead when nothing matches.
+     */
+    private void showFilteredTasks(TaskList tasks, Predicate<Task> isMatch,
+            String heading, String emptyMessage) {
         boolean hasFoundTask = false;
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
-            if (task.hasKeyword(keyword)) {
-                if (!hasFoundTask) {
-                    out.println("Here are the matching tasks in your list:");
-                }
-                showNumberedTask(i, task);
+            if (!isMatch.test(task)) {
+                continue;
+            }
+            if (!hasFoundTask) {
+                out.println(heading);
                 hasFoundTask = true;
             }
+            showNumberedTask(i, task);
         }
+
         if (!hasFoundTask) {
-            out.println("There are no matching tasks in your list.");
+            out.println(emptyMessage);
         }
     }
 
