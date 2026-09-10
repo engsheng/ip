@@ -43,6 +43,12 @@ public class Peter {
         }
         this.tasks = loadedTasks;
         this.loadingError = loadError;
+
+        // run() and the graphical interface both refuse to run commands once
+        // loading has failed, so that a half-loaded list is never saved back
+        // over the user's data file. That is only safe if a failed load left
+        // no tasks behind at all.
+        assert loadingError == null || tasks.size() == 0 : "a failed load must leave the task list empty";
     }
 
     /**

@@ -236,6 +236,9 @@ public class Ui {
 
     /** Displays a task prefixed by its one-based list number. */
     private void showNumberedTask(int index, Task task) {
+        // The displayed number is the index plus one, so a negative index
+        // would print a task number the user could not then type back.
+        assert index >= 0 : "a displayed task index must not be negative";
         out.println((index + 1) + "." + formatTask(task));
     }
 
