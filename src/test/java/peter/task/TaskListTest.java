@@ -217,6 +217,49 @@ public class TaskListTest {
     }
 
     // =====================================================================
+    // findMatchingIndexes()
+    // =====================================================================
+
+    @Test
+    public void findMatchingIndexes_someTasksMatch_indexesInListOrder() {
+        TaskList tasks = new TaskList(
+                new Todo("read book"), new Todo("return pen"), new Todo("borrow book"));
+
+        List<Integer> matchingIndexes = tasks.findMatchingIndexes(task -> task.hasKeyword("book"));
+
+        assertEquals(List.of(0, 2), matchingIndexes);
+    }
+
+    @Test
+    public void findMatchingIndexes_noTasksMatch_emptyListReturned() {
+        TaskList tasks = new TaskList(new Todo("read book"));
+
+        assertTrue(tasks.findMatchingIndexes(task -> task.hasKeyword("pen")).isEmpty());
+    }
+
+    @Test
+    public void findMatchingIndexes_emptyList_emptyListReturned() {
+        assertTrue(new TaskList().findMatchingIndexes(task -> true).isEmpty());
+    }
+
+    @Test
+    public void findMatchingIndexes_allTasksMatch_everyIndexReturned() {
+        TaskList tasks = new TaskList(new Todo("first"), new Todo("second"));
+
+        assertEquals(List.of(0, 1), tasks.findMatchingIndexes(task -> true));
+    }
+
+    @Test
+    public void findMatchingIndexes_attemptToModifyResult_exceptionThrown() {
+        // Stream.toList() returns an unmodifiable list, so callers cannot
+        // accidentally treat the search result as a scratch list.
+        List<Integer> matchingIndexes = new TaskList(new Todo("first"))
+                .findMatchingIndexes(task -> true);
+
+        assertThrows(UnsupportedOperationException.class, () -> matchingIndexes.add(1));
+    }
+
+    // =====================================================================
     // asList()
     // =====================================================================
 

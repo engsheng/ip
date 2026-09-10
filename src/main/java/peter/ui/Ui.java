@@ -2,6 +2,7 @@ package peter.ui;
 
 import java.io.PrintStream;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Predicate;
 
@@ -204,10 +205,12 @@ public class Ui {
      * Displays the tasks a search selects, keeping their original task numbers
      * so subsequent task commands can refer to them directly.
      *
-     * <p>The heading appears only once a first match is found, so a search
-     * that selects nothing shows {@code emptyMessage} on its own. Both the
-     * {@code on} and {@code find} searches display their results this way, and
-     * differ only in the three values passed here.
+     * <p>A search that selects nothing shows {@code emptyMessage} instead of
+     * the heading. Both the {@code on} and {@code find} searches display their
+     * results this way, and differ only in the three values passed here.
+     *
+     * <p>The task list decides which tasks match, leaving this method
+     * responsible only for the output.
      *
      * @param tasks tasks to search.
      * @param isMatch test deciding whether a task is part of the result.
@@ -216,22 +219,14 @@ public class Ui {
      */
     private void showFilteredTasks(TaskList tasks, Predicate<Task> isMatch,
             String heading, String emptyMessage) {
-        boolean hasFoundTask = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            if (!isMatch.test(task)) {
-                continue;
-            }
-            if (!hasFoundTask) {
-                out.println(heading);
-                hasFoundTask = true;
-            }
-            showNumberedTask(i, task);
+        List<Integer> matchingIndexes = tasks.findMatchingIndexes(isMatch);
+        if (matchingIndexes.isEmpty()) {
+            out.println(emptyMessage);
+            return;
         }
 
-        if (!hasFoundTask) {
-            out.println(emptyMessage);
-        }
+        out.println(heading);
+        matchingIndexes.forEach(index -> showNumberedTask(index, tasks.get(index)));
     }
 
     /** Displays a task prefixed by its one-based list number. */

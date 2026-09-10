@@ -3,6 +3,8 @@ package peter.task;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 /**
  * Owns the in-memory collection of tasks and its basic list operations.
@@ -103,6 +105,30 @@ public class TaskList {
         } else {
             tasks.get(index).unmarkAsDone();
         }
+    }
+
+    /**
+     * Returns the indices of the tasks satisfying a test, in list order.
+     *
+     * <p>Indices are returned rather than the tasks themselves so that a caller
+     * displaying the results can keep each task's original list number, which
+     * is what later mark, unmark, and delete commands refer to.
+     *
+     * <p>The caller supplies the test as a {@link Predicate}, so one search
+     * method serves every kind of search. It is implemented as a stream over
+     * the index range: {@code IntStream.range} supplies the indices,
+     * {@code filter} keeps those whose task passes the test, and {@code boxed}
+     * converts the {@code int} values into the {@code Integer} elements the
+     * returned list holds.
+     *
+     * @param predicate test that a task must pass to be included.
+     * @return zero-based indices of the matching tasks.
+     */
+    public List<Integer> findMatchingIndexes(Predicate<Task> predicate) {
+        return IntStream.range(0, tasks.size())
+                .filter(index -> predicate.test(tasks.get(index)))
+                .boxed()
+                .toList();
     }
 
     /**
