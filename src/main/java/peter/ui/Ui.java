@@ -2,7 +2,9 @@ package peter.ui;
 
 import java.io.PrintStream;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 import peter.task.ScheduleDateTime;
 import peter.task.Task;
@@ -179,22 +181,10 @@ public class Ui {
      * @param date date to report on.
      */
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
-        boolean hasFoundTask = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            if (task.occursOn(date)) {
-                if (!hasFoundTask) {
-                    out.println("Here are the scheduled tasks on "
-                            + ScheduleDateTime.format(date) + ":");
-                }
-                showNumberedTask(i, task);
-                hasFoundTask = true;
-            }
-        }
-        if (!hasFoundTask) {
-            out.println("There are no scheduled tasks on "
-                    + ScheduleDateTime.format(date) + ".");
-        }
+        showSearchResults(tasks,
+                task -> task.occursOn(date),
+                "Here are the scheduled tasks on " + ScheduleDateTime.format(date) + ":",
+                "There are no scheduled tasks on " + ScheduleDateTime.format(date) + ".");
     }
 
     /**
@@ -206,20 +196,30 @@ public class Ui {
      * @param keyword keyword to search descriptions for.
      */
     public void showMatchingTasks(TaskList tasks, String keyword) {
-        boolean hasFoundTask = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            if (task.hasKeyword(keyword)) {
-                if (!hasFoundTask) {
-                    out.println("Here are the matching tasks in your list:");
-                }
-                showNumberedTask(i, task);
-                hasFoundTask = true;
-            }
+        showSearchResults(tasks,
+                task -> task.hasKeyword(keyword),
+                "Here are the matching tasks in your list:",
+                "There are no matching tasks in your list.");
+    }
+
+    /**
+     * Displays the tasks passing a search test, numbered as in the full list,
+     * or reports that the search found nothing.
+     *
+     * <p>Both searches share this method because they differ only in the test
+     * they apply and the two messages they print. The task list itself decides
+     * which tasks match, leaving the UI responsible only for the output.
+     */
+    private void showSearchResults(TaskList tasks, Predicate<Task> predicate,
+            String foundHeading, String noneFoundMessage) {
+        List<Integer> matchingIndexes = tasks.findMatchingIndexes(predicate);
+        if (matchingIndexes.isEmpty()) {
+            out.println(noneFoundMessage);
+            return;
         }
-        if (!hasFoundTask) {
-            out.println("There are no matching tasks in your list.");
-        }
+
+        out.println(foundHeading);
+        matchingIndexes.forEach(index -> showNumberedTask(index, tasks.get(index)));
     }
 
     /** Displays a task prefixed by its one-based list number. */

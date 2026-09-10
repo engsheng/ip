@@ -3,6 +3,8 @@ package peter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.Optional;
 
 import peter.command.AddCommand;
 import peter.command.Command;
@@ -58,32 +60,35 @@ public final class Parser {
             return command;
         }
 
-        String commandWord = matchCommandWord(command,
-                "on", "find", "todo", "deadline", "event", "mark", "unmark", "delete");
-        if (commandWord == null) {
-            throw new PeterException("I'm sorry, but I don't understand that command. Please try again.");
-        }
-        return commandWord;
+        return matchCommandWord(command,
+                "on", "find", "todo", "deadline", "event", "mark", "unmark", "delete")
+                .orElseThrow(() -> new PeterException(
+                        "I'm sorry, but I don't understand that command. Please try again."));
     }
 
     /**
      * Returns the first of the given command words that the command starts
-     * with, or {@code null} if the command matches none of them.
+     * with, if any of them matches.
      *
      * <p>The candidates are var-args so the caller can list them inline,
      * rather than building an array only for this method to read.
      *
+     * <p>A stream over those candidates expresses the search directly: keep the
+     * ones the command starts with, then take the first. Streams preserve the
+     * order of their source, so {@code findFirst} still respects the caller's
+     * order of preference. Returning an {@link Optional} rather than
+     * {@code null} makes "no match" part of the method's type, so the caller
+     * cannot forget to handle it.
+     *
      * @param command complete command entered by the user.
      * @param commandWords command words to test, in order of preference.
-     * @return matching command word, or {@code null} if there is none.
+     * @return matching command word, or an empty optional if there is none.
      */
-    private static String matchCommandWord(String command, String... commandWords) {
-        for (String commandWord : commandWords) {
-            if (command.equals(commandWord) || command.startsWith(commandWord + " ")) {
-                return commandWord;
-            }
-        }
-        return null;
+    private static Optional<String> matchCommandWord(String command, String... commandWords) {
+        return Arrays.stream(commandWords)
+                .filter(commandWord -> command.equals(commandWord)
+                        || command.startsWith(commandWord + " "))
+                .findFirst();
     }
 
     /**
@@ -264,12 +269,15 @@ public final class Parser {
         }
     }
 
-    /** Rejects the delimiter used to separate fields in the data file. */
+    /**
+     * Rejects the delimiter used to separate fields in the data file.
+     *
+     * <p>{@code anyMatch} states the check as the question being asked, and
+     * stops at the first offending field rather than testing the rest.
+     */
     private static void validateStorageFields(String... fields) throws PeterException {
-        for (String field : fields) {
-            if (field.contains(" | ")) {
-                throw new PeterException("Oh dear! Task details cannot contain ' | '.");
-            }
+        if (Arrays.stream(fields).anyMatch(field -> field.contains(" | "))) {
+            throw new PeterException("Oh dear! Task details cannot contain ' | '.");
         }
     }
 }
