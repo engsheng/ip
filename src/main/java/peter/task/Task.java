@@ -30,6 +30,15 @@ public abstract class Task {
      * @param type kind of task being created
      */
     public Task(String description, TaskType type) {
+        // Parser and Storage both reject a blank description and one holding
+        // the data-file delimiter before creating a task, so these are the
+        // invariants promised by the fields above rather than input checks.
+        // A task that broke them would print as an empty row, or save a line
+        // that the next startup would read back as a corrupt record.
+        assert description != null && !description.isBlank() : "task description must not be blank";
+        assert !description.contains(" | ") : "task description must not contain the storage delimiter";
+        assert type != null : "every task must have a type to display an icon for";
+
         this.description = description;
         this.type = type;
         this.isDone = false;

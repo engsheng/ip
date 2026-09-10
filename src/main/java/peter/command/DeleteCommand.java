@@ -37,6 +37,10 @@ public class DeleteCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());
         Task removedTask = tasks.delete(taskIndex);
+        // Both the rollback and the confirmation message use this task, so a
+        // null here would mean the list had been storing one all along.
+        assert removedTask != null : "a validated task index must yield a task";
+
         saveOrRollback(tasks, storage, () -> tasks.add(taskIndex, removedTask));
         ui.showRemovedTask(removedTask, tasks.size());
     }

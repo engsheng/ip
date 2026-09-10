@@ -111,6 +111,10 @@ public final class Parser {
      * @throws PeterException if the date is missing or invalid.
      */
     private static LocalDate parseQueryDate(String command) throws PeterException {
+        // The substring below drops a fixed number of characters, which is
+        // only the command word if parse() dispatched here on "on".
+        assert command.startsWith("on") : "parseQueryDate is only reached for an on command";
+
         String dateText = command.substring("on".length()).trim();
         if (dateText.isEmpty()) {
             throw new PeterException("Use 'on <date>' (e.g., on 2019-12-02).");
@@ -134,6 +138,8 @@ public final class Parser {
      * @throws PeterException if the keyword is missing.
      */
     private static String parseKeyword(String command) throws PeterException {
+        assert command.startsWith("find") : "parseKeyword is only reached for a find command";
+
         String keyword = command.substring("find".length()).trim();
         if (keyword.isEmpty()) {
             throw new PeterException("Use 'find <keyword>' (e.g., find book).");
@@ -153,7 +159,14 @@ public final class Parser {
      * @throws PeterException if the task number is missing or invalid.
      */
     public static int parseTaskIndex(String command, int taskCount) throws PeterException {
+        // A task count is a size, so a negative one could only come from a
+        // broken task list rather than from anything the user typed.
+        assert taskCount >= 0 : "task count must not be negative";
         String action = getCommandWord(command);
+        // getCommandWord matches on a prefix, so the command must begin with
+        // the word whose length is skipped here.
+        assert command.startsWith(action) : "command must start with its own command word";
+
         String taskNumberText = command.substring(action.length()).trim();
         if (taskNumberText.isEmpty()) {
             throw new PeterException("Oh dear! Please provide a task number to " + action + ".");
@@ -176,6 +189,8 @@ public final class Parser {
     }
 
     private static Todo parseTodo(String command) throws PeterException {
+        assert command.startsWith("todo") : "parseTodo is only reached for a todo command";
+
         String description = command.length() == "todo".length()
                 ? "" : command.substring("todo ".length());
         if (description.isBlank()) {
@@ -186,6 +201,8 @@ public final class Parser {
     }
 
     private static Deadline parseDeadline(String command) throws PeterException {
+        assert command.startsWith("deadline") : "parseDeadline is only reached for a deadline command";
+
         int byMarkerIndex = command.indexOf(" /by ");
         if (byMarkerIndex == -1) {
             if (command.endsWith(" /by")) {
@@ -210,6 +227,8 @@ public final class Parser {
     }
 
     private static Event parseEvent(String command) throws PeterException {
+        assert command.startsWith("event") : "parseEvent is only reached for an event command";
+
         int fromMarkerIndex = command.indexOf(" /from ");
         int toMarkerIndex = command.indexOf(" /to ");
         if (fromMarkerIndex == -1 || toMarkerIndex == -1 || fromMarkerIndex >= toMarkerIndex) {
