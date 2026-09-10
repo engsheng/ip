@@ -46,6 +46,26 @@ public class PeterTest {
     }
 
     @Test
+    public void getResponse_findWithKeywordsSpreadApart_taskFound() {
+        // The keywords need not be adjacent in the description, which is what
+        // a single literal search term could not do.
+        peter.getResponse("todo read a book");
+
+        assertEquals("Here are the matching tasks in your list:\n1.[T][ ] read a book",
+                peter.getResponse("find read book").replace("\r\n", "\n"));
+    }
+
+    @Test
+    public void getResponse_findWithOneKeywordUnmatched_taskExcluded() {
+        // Every keyword must match, so adding a keyword narrows the results.
+        peter.getResponse("todo read book");
+        peter.getResponse("todo buy milk");
+
+        assertEquals("There are no matching tasks in your list.",
+                peter.getResponse("find book milk").replace("\r\n", "\n"));
+    }
+
+    @Test
     public void getResponse_unknownCommand_errorMessageReturned() {
         assertEquals("I'm sorry, but I don't understand that command. Please try again.",
                 peter.getResponse("blah"));

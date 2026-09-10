@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -172,7 +173,7 @@ public class ParserTest {
     }
 
     // =====================================================================
-    // parse(String): "find" keyword
+    // parse(String): "find" keywords
     // =====================================================================
 
     @Test
@@ -184,25 +185,43 @@ public class ParserTest {
     public void parse_findCommandWithoutKeyword_exceptionThrown() {
         PeterException exception = assertThrows(PeterException.class, () ->
                 Parser.parse("find"));
-        assertEquals("Use 'find <keyword>' (e.g., find book).", exception.getMessage());
+        assertEquals("Use 'find <keywords>' (e.g., find read book).", exception.getMessage());
     }
 
     @Test
     public void parse_findCommandWithBlankKeyword_exceptionThrown() {
-        // The keyword is trimmed, so whitespace counts as missing.
+        // The arguments are trimmed, so whitespace counts as missing.
         assertThrows(PeterException.class, () -> Parser.parse("find    "));
     }
 
     @Test
     public void parse_findCommandWithSurroundingSpaces_keywordAccepted() throws PeterException {
-        assertInstanceOf(FindCommand.class, Parser.parse("find   book  "));
+        assertEquals(List.of("book"), parseToKeywords("find   book  "));
     }
 
     @Test
-    public void parse_findCommandWithMultiWordKeyword_keywordAccepted() throws PeterException {
-        // Everything after "find" is one search term, so an inner space is
-        // kept rather than splitting into several keywords.
-        assertInstanceOf(FindCommand.class, Parser.parse("find read book"));
+    public void parse_findCommandWithOneKeyword_singleKeywordReturned() throws PeterException {
+        assertEquals(List.of("book"), parseToKeywords("find book"));
+    }
+
+    @Test
+    public void parse_findCommandWithSeveralKeywords_keywordsSplit() throws PeterException {
+        // Each word is its own keyword, rather than the whole remainder being
+        // one search term, so a task matches only if it contains both.
+        assertEquals(List.of("read", "book"), parseToKeywords("find read book"));
+    }
+
+    @Test
+    public void parse_findCommandWithRepeatedInnerSpaces_keywordsSplit() throws PeterException {
+        // Splitting on runs of whitespace means extra spacing is insignificant.
+        assertEquals(List.of("read", "book"), parseToKeywords("find   read    book"));
+    }
+
+    @Test
+    public void parse_findCommandWithKeywordsInAnyOrder_orderPreserved() throws PeterException {
+        // The keywords are kept in the order typed; the search itself is what
+        // ignores their order.
+        assertEquals(List.of("book", "read"), parseToKeywords("find book read"));
     }
 
     @Test
@@ -581,5 +600,24 @@ public class ParserTest {
             System.setOut(originalOut);
         }
         return tasks.get(0);
+    }
+
+    /**
+     * Parses a find command and returns the keywords it produced.
+     *
+     * <p>Unlike {@link #parseToTask(String)}, this needs no task list or
+     * storage, because {@link FindCommand} exposes its keywords directly. The
+     * splitting rule is therefore pinned here rather than inferred from
+     * rendered console output.
+     *
+     * @param command find command to parse.
+     * @return the keywords the parser produced.
+     * @throws PeterException if the command is invalid.
+     */
+    private List<String> parseToKeywords(String command) throws PeterException {
+        Command parsedCommand = Parser.parse(command);
+        assertInstanceOf(FindCommand.class, parsedCommand);
+
+        return ((FindCommand) parsedCommand).getKeywords();
     }
 }

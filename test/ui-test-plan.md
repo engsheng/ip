@@ -454,9 +454,11 @@ ____________________________________________________________
 
 ## Test case: find tasks by keyword
 
-**Aim:** Verify that `find` matches a keyword anywhere in a task description
-regardless of case, keeps original task numbers, reports when nothing matches,
-and rejects a missing keyword.
+**Aim:** Verify that `find` matches every one of several keywords anywhere in a
+task description, in any order and without needing them adjacent, keeps
+original task numbers, reports when nothing matches, and rejects a missing
+keyword. Case folding and per-keyword partial matching are covered by the unit
+tests rather than repeated here.
 
 **Command:**
 
@@ -471,7 +473,8 @@ $uiTestData = @(
     'T | 1 | read book',
     'D | 1 | return book | 2019-06-06T00:00',
     'E | 0 | book fair | 2019-08-06T00:00 | 2019-08-07T00:00',
-    'T | 0 | buy milk'
+    'T | 0 | buy milk',
+    'T | 0 | read a book'
 )
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
@@ -484,9 +487,9 @@ java -ea -cp $uiTestBuildDirectory peter.Peter
 ```text
 find
 find book
-find BOOK
-find milk
-find homework
+find read book
+find book read
+find book milk
 bye
 ```
 
@@ -503,23 +506,24 @@ Yo! I'm Peter.
 What crazy adventures are we making today?
 ____________________________________________________________
 ____________________________________________________________
-Use 'find <keyword>' (e.g., find book).
+Use 'find <keywords>' (e.g., find read book).
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching tasks in your list:
 1.[T][X] read book
 2.[D][X] return book (by: Jun 6 2019)
 3.[E][ ] book fair (from: Aug 6 2019 to: Aug 7 2019)
+5.[T][ ] read a book
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: Jun 6 2019)
-3.[E][ ] book fair (from: Aug 6 2019 to: Aug 7 2019)
+5.[T][ ] read a book
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching tasks in your list:
-4.[T][ ] buy milk
+1.[T][X] read book
+5.[T][ ] read a book
 ____________________________________________________________
 ____________________________________________________________
 There are no matching tasks in your list.

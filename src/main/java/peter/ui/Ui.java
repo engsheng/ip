@@ -188,15 +188,17 @@ public class Ui {
     }
 
     /**
-     * Displays the tasks whose descriptions contain a keyword, keeping their
-     * original task numbers so subsequent task commands can refer to them
-     * directly.
+     * Displays the tasks a keyword search selects, keeping their original task
+     * numbers so subsequent task commands can refer to them directly.
+     *
+     * <p>The caller decides what counts as a match, so this method is
+     * responsible only for the output.
      *
      * @param tasks tasks to search.
-     * @param keyword keyword to search descriptions for.
+     * @param isMatch test deciding whether a task matches the search.
      */
-    public void showMatchingTasks(TaskList tasks, String keyword) {
-        showFilteredTasks(tasks, task -> task.hasKeyword(keyword),
+    public void showMatchingTasks(TaskList tasks, Predicate<Task> isMatch) {
+        showFilteredTasks(tasks, isMatch,
                 "Here are the matching tasks in your list:",
                 "There are no matching tasks in your list.");
     }
