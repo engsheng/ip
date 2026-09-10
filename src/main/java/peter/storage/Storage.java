@@ -9,12 +9,14 @@ import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import peter.PeterException;
 import peter.task.Deadline;
 import peter.task.Event;
 import peter.task.ScheduleDateTime;
 import peter.task.Task;
+import peter.task.TaskType;
 import peter.task.Todo;
 
 /**
@@ -66,18 +68,15 @@ public final class Storage {
     }
 
     private static Task parseTask(String taskLine, int lineNumber) throws PeterException {
-        String[] taskParts = taskLine.split(" \\| ", -1);
-        if (taskParts.length < 2 || (!taskParts[1].equals("0") && !taskParts[1].equals("1"))) {
+        String[] taskParts = taskLine.split(Pattern.quote(Task.FIELD_DELIMITER), -1);
+        if (taskParts.length < 2 || (!taskParts[1].equals(Task.STATUS_FLAG_NOT_DONE)
+                && !taskParts[1].equals(Task.STATUS_FLAG_DONE))) {
             throw invalidDataException(lineNumber);
         }
 
-        int expectedPartCount = switch (taskParts[0]) {
-            case "T" -> 3;
-            case "D" -> 4;
-            case "E" -> 5;
-            default -> throw invalidDataException(lineNumber);
-        };
-        if (taskParts.length != expectedPartCount) {
+        TaskType taskType = TaskType.fromIcon(taskParts[0])
+                .orElseThrow(() -> invalidDataException(lineNumber));
+        if (taskParts.length != taskType.getDataFieldCount()) {
             throw invalidDataException(lineNumber);
         }
         for (int i = 2; i < taskParts.length; i++) {
@@ -88,19 +87,18 @@ public final class Storage {
 
         Task task;
         try {
-            task = switch (taskParts[0]) {
-                case "T" -> new Todo(taskParts[2]);
-                case "D" -> new Deadline(taskParts[2],
+            task = switch (taskType) {
+                case TODO -> new Todo(taskParts[2]);
+                case DEADLINE -> new Deadline(taskParts[2],
                         ScheduleDateTime.parseStoredValue(taskParts[3]));
-                case "E" -> new Event(taskParts[2],
+                case EVENT -> new Event(taskParts[2],
                         ScheduleDateTime.parseStoredValue(taskParts[3]),
                         ScheduleDateTime.parseStoredValue(taskParts[4]));
-                default -> throw invalidDataException(lineNumber);
             };
         } catch (DateTimeParseException e) {
             throw invalidDataException(lineNumber);
         }
-        if (taskParts[1].equals("1")) {
+        if (taskParts[1].equals(Task.STATUS_FLAG_DONE)) {
             task.markAsDone();
         }
         return task;
@@ -143,6 +141,11 @@ public final class Storage {
      * Replaces the data file atomically when supported by the file system.
      */
     private void moveTemporaryFileIntoPlace() throws IOException {
+        // Replacing the data file is only safe once the replacement exists in
+        // full. Calling this before the temporary file has been written would
+        // destroy the saved tasks instead of updating them.
+        assert Files.exists(temporaryDataFile) : "the temporary file must be written before it is moved";
+
         try {
             Files.move(temporaryDataFile, dataFile,
                     StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);

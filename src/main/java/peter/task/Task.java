@@ -1,24 +1,32 @@
 package peter.task;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Represents a task tracked by Peter.
  */
 public abstract class Task {
-    /**
-     * What the task says, as the user typed it. Subclasses read this directly
-     * when building their data-file line, so it must never contain the
-     * {@code " | "} field delimiter used by that file.
-     */
-    protected String description;
+    /** Separates the fields of a task within its line in the data file. */
+    public static final String FIELD_DELIMITER = " | ";
+
+    /** Data-file status flag marking a completed task. */
+    public static final String STATUS_FLAG_DONE = "1";
+
+    /** Data-file status flag marking a task that is not yet completed. */
+    public static final String STATUS_FLAG_NOT_DONE = "0";
 
     /**
-     * Whether the task has been completed. Subclasses read this directly to
-     * write the status flag into their data-file line.
+     * What the task says, as the user typed it. It must never contain
+     * {@link #FIELD_DELIMITER}, which would split it across two fields when
+     * the task is saved.
      */
-    protected boolean isDone;
+    private final String description;
+
+    /** Whether the task has been completed. */
+    private boolean isDone;
 
     /** Fixed task type, used to pick the icon shown in the task list. */
     private final TaskType type;
@@ -26,10 +34,19 @@ public abstract class Task {
     /**
      * Creates a task that starts out incomplete.
      *
-     * @param description what the task says
-     * @param type kind of task being created
+     * @param description what the task says.
+     * @param type kind of task being created.
      */
     public Task(String description, TaskType type) {
+        // Parser and Storage both reject a blank description and one holding
+        // the data-file delimiter before creating a task, so these are the
+        // invariants promised by the fields above rather than input checks.
+        // A task that broke them would print as an empty row, or save a line
+        // that the next startup would read back as a corrupt record.
+        assert description != null && !description.isBlank() : "task description must not be blank";
+        assert !description.contains(" | ") : "task description must not contain the storage delimiter";
+        assert type != null : "every task must have a type to display an icon for";
+
         this.description = description;
         this.type = type;
         this.isDone = false;
@@ -70,16 +87,36 @@ public abstract class Task {
      * leading space and brackets, or an empty string for a task with no
      * schedule.
      *
-     * @return displayable schedule text
+     * @return displayable schedule text.
      */
     public abstract String getScheduleDetails();
 
     /**
      * Converts this task into the line format used in the data file.
      *
+     * <p>Every task line opens with the same three fields, so they are built
+     * here rather than by each subclass; a subclass supplies only the
+     * schedule fields that follow.
+     *
      * @return the serialized task.
      */
-    public abstract String toDataString();
+    public final String toDataString() {
+        List<String> fields = new ArrayList<>(List.of(getTaskTypeIcon(),
+                isDone ? STATUS_FLAG_DONE : STATUS_FLAG_NOT_DONE, description));
+        fields.addAll(getScheduleDataFields());
+        return String.join(FIELD_DELIMITER, fields);
+    }
+
+    /**
+     * Returns this task's schedule as the data-file fields that follow the
+     * description, in the order they are stored.
+     *
+     * <p>Dates are written in ISO form so that they can be read back exactly,
+     * rather than in the friendlier display format.
+     *
+     * @return schedule fields, which are none for a task with no schedule.
+     */
+    protected abstract List<String> getScheduleDataFields();
 
     /**
      * Checks whether this task is scheduled on a given date. Tasks without a

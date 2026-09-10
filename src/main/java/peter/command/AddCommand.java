@@ -31,6 +31,10 @@ public class AddCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PeterException {
         tasks.add(task);
+        // The rollback below deletes whichever task is last, so it only undoes
+        // this command while the task just added is still the last one.
+        assert tasks.get(tasks.size() - 1) == task : "the added task must be the last in the list";
+
         saveOrRollback(tasks, storage, () -> tasks.delete(tasks.size() - 1));
         ui.showAddedTask(task, tasks.size());
     }

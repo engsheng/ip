@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link TaskList}.
  *
  * <p>Most methods here delegate straight to {@link ArrayList}, so the tests
- * concentrate on the parts that are genuinely this class's own behaviour: the
+ * concentrate on the parts that are genuinely this class's own behavior: the
  * defensive copy in the constructor, the unmodifiable view returned by
  * {@code asList}, index-based insertion used to undo a failed deletion, and
  * the index bounds that protect the rest of the app.
@@ -95,18 +95,22 @@ public class TaskListTest {
         assertEquals(2, tasks.size());
     }
 
+    // An out-of-range index is a bug in the calling command rather than a user
+    // mistake, so TaskList now asserts against it and an AssertionError arrives
+    // before the backing list can throw IndexOutOfBoundsException. These tests
+    // rely on Gradle running the test JVM with assertions enabled.
     @Test
-    public void get_indexOutOfBounds_exceptionThrown() {
+    public void get_indexOutOfBounds_assertionFailed() {
         TaskList tasks = new TaskList();
         tasks.add(new Todo("only"));
 
-        assertThrows(IndexOutOfBoundsException.class, () -> tasks.get(1));
-        assertThrows(IndexOutOfBoundsException.class, () -> tasks.get(-1));
+        assertThrows(AssertionError.class, () -> tasks.get(1));
+        assertThrows(AssertionError.class, () -> tasks.get(-1));
     }
 
     @Test
-    public void get_emptyList_exceptionThrown() {
-        assertThrows(IndexOutOfBoundsException.class, () -> new TaskList().get(0));
+    public void get_emptyList_assertionFailed() {
+        assertThrows(AssertionError.class, () -> new TaskList().get(0));
     }
 
     // =====================================================================
@@ -141,8 +145,8 @@ public class TaskListTest {
     }
 
     @Test
-    public void addAtIndex_indexBeyondSize_exceptionThrown() {
-        assertThrows(IndexOutOfBoundsException.class, () ->
+    public void addAtIndex_indexBeyondSize_assertionFailed() {
+        assertThrows(AssertionError.class, () ->
                 new TaskList().add(1, new Todo("first")));
     }
 
@@ -170,9 +174,9 @@ public class TaskListTest {
     }
 
     @Test
-    public void delete_indexOutOfBounds_exceptionThrown() {
+    public void delete_indexOutOfBounds_assertionFailed() {
         TaskList tasks = new TaskList(new Todo("only"));
-        assertThrows(IndexOutOfBoundsException.class, () -> tasks.delete(1));
+        assertThrows(AssertionError.class, () -> tasks.delete(1));
     }
 
     // =====================================================================
@@ -208,8 +212,8 @@ public class TaskListTest {
     }
 
     @Test
-    public void setDone_indexOutOfBounds_exceptionThrown() {
-        assertThrows(IndexOutOfBoundsException.class, () -> new TaskList().setDone(0, true));
+    public void setDone_indexOutOfBounds_assertionFailed() {
+        assertThrows(AssertionError.class, () -> new TaskList().setDone(0, true));
     }
 
     // =====================================================================

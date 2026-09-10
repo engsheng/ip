@@ -9,6 +9,12 @@ graphical classes need JavaFX on the compile classpath and only Gradle knows
 where those jars are. The console entry point itself needs no JavaFX, so it
 still runs from a plain classpath.
 
+Every case runs `java` with `-ea`, which turns on the `assert` statements that
+document the code's internal assumptions. The JVM ignores them otherwise, so
+without the flag these cases could not tell a held assumption from a broken
+one. No case expects an assertion to fail: an `AssertionError` anywhere in the
+output is a bug in the program, not a rejected input.
+
 The graphical interface is covered by the manual checklist at the end of this
 file. It is deliberately short: the two front ends share all of their logic, so
 the console cases above already exercise the behaviour, and only what is
@@ -27,7 +33,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -79,7 +85,7 @@ $uiTestData = @(
 $utf8WithBom = New-Object System.Text.UTF8Encoding($true)
 [System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithBom)
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -125,7 +131,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -195,7 +201,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -269,7 +275,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -320,7 +326,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -396,7 +402,7 @@ $uiTestData = @(
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -470,7 +476,7 @@ $uiTestData = @(
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -536,7 +542,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -579,7 +585,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -648,7 +654,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -723,7 +729,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -799,7 +805,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -850,7 +856,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -923,7 +929,7 @@ $uiTestData = @('', 'T | 0 | read book', 'D | maybe | return book | June 6th')
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllLines($uiTestDataFile, $uiTestData, $utf8WithoutBom)
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -961,7 +967,7 @@ $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 $uiTestDataPath = Join-Path $uiTestRunDirectory 'data\peter.txt'
 New-Item -ItemType Directory -Force -Path $uiTestDataPath | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -999,7 +1005,7 @@ $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 New-Item -ItemType File -Path (Join-Path $uiTestRunDirectory 'data') | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -1046,7 +1052,7 @@ $uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
 $uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
 Set-Location $uiTestRunDirectory
-java -cp $uiTestBuildDirectory peter.Peter
+java -ea -cp $uiTestBuildDirectory peter.Peter
 ```
 
 **Inputs:**
@@ -1092,7 +1098,7 @@ ____________________________________________________________
 
 The graphical interface cannot be driven by piping text at it, so these are
 checked by hand. Start each one with `./gradlew run` from the project root, or
-`java -jar build/libs/peter.jar` when checking a release.
+`java -ea -jar build/libs/peter.jar` when checking a release.
 
 Run these after any change under `src/main/java/peter/gui` or
 `src/main/resources`. Changes to the task, parser or storage code are covered

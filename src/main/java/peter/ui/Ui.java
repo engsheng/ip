@@ -181,10 +181,10 @@ public class Ui {
      * @param date date to report on.
      */
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
-        showSearchResults(tasks,
-                task -> task.occursOn(date),
-                "Here are the scheduled tasks on " + ScheduleDateTime.format(date) + ":",
-                "There are no scheduled tasks on " + ScheduleDateTime.format(date) + ".");
+        String dateText = ScheduleDateTime.format(date);
+        showFilteredTasks(tasks, task -> task.occursOn(date),
+                "Here are the scheduled tasks on " + dateText + ":",
+                "There are no scheduled tasks on " + dateText + ".");
     }
 
     /**
@@ -196,34 +196,44 @@ public class Ui {
      * @param keyword keyword to search descriptions for.
      */
     public void showMatchingTasks(TaskList tasks, String keyword) {
-        showSearchResults(tasks,
-                task -> task.hasKeyword(keyword),
+        showFilteredTasks(tasks, task -> task.hasKeyword(keyword),
                 "Here are the matching tasks in your list:",
                 "There are no matching tasks in your list.");
     }
 
     /**
-     * Displays the tasks passing a search test, numbered as in the full list,
-     * or reports that the search found nothing.
+     * Displays the tasks a search selects, keeping their original task numbers
+     * so subsequent task commands can refer to them directly.
      *
-     * <p>Both searches share this method because they differ only in the test
-     * they apply and the two messages they print. The task list itself decides
-     * which tasks match, leaving the UI responsible only for the output.
+     * <p>A search that selects nothing shows {@code emptyMessage} instead of
+     * the heading. Both the {@code on} and {@code find} searches display their
+     * results this way, and differ only in the three values passed here.
+     *
+     * <p>The task list decides which tasks match, leaving this method
+     * responsible only for the output.
+     *
+     * @param tasks tasks to search.
+     * @param isMatch test deciding whether a task is part of the result.
+     * @param heading line introducing the matches.
+     * @param emptyMessage line shown instead when nothing matches.
      */
-    private void showSearchResults(TaskList tasks, Predicate<Task> predicate,
-            String foundHeading, String noneFoundMessage) {
-        List<Integer> matchingIndexes = tasks.findMatchingIndexes(predicate);
+    private void showFilteredTasks(TaskList tasks, Predicate<Task> isMatch,
+            String heading, String emptyMessage) {
+        List<Integer> matchingIndexes = tasks.findMatchingIndexes(isMatch);
         if (matchingIndexes.isEmpty()) {
-            out.println(noneFoundMessage);
+            out.println(emptyMessage);
             return;
         }
 
-        out.println(foundHeading);
+        out.println(heading);
         matchingIndexes.forEach(index -> showNumberedTask(index, tasks.get(index)));
     }
 
     /** Displays a task prefixed by its one-based list number. */
     private void showNumberedTask(int index, Task task) {
+        // The displayed number is the index plus one, so a negative index
+        // would print a task number the user could not then type back.
+        assert index >= 0 : "a displayed task index must not be negative";
         out.println((index + 1) + "." + formatTask(task));
     }
 

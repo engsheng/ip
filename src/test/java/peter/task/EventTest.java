@@ -62,7 +62,7 @@ public class EventTest {
     @Test
     public void occursOn_singleDayEvent_onlyThatDateMatches() {
         // Start and end on the same day: the narrowest possible range, where
-        // an off-by-one would either match nothing or match neighbours.
+        // an off-by-one would either match nothing or match neighbors.
         Event event = new Event("meeting",
                 LocalDateTime.of(2019, 12, 2, 9, 0),
                 LocalDateTime.of(2019, 12, 2, 17, 0));

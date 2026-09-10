@@ -134,7 +134,7 @@ public class StorageTest {
     public void load_fileStartingWithByteOrderMark_markIgnored()
             throws PeterException, IOException {
         // A data file edited in some Windows editors gains a leading BOM,
-        // which would otherwise make the first line's type unrecognisable.
+        // which would otherwise make the first line's type unrecognizable.
         writeDataFile("﻿T | 0 | read book");
         assertEquals("read book", storage.load().get(0).getDescription());
     }

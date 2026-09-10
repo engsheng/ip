@@ -119,7 +119,7 @@ public class ParserTest {
 
     @Test
     public void parse_argumentlessCommandWithTrailingSpace_exceptionThrown() {
-        // Documents current behaviour: input is not trimmed before matching,
+        // Documents current behavior: input is not trimmed before matching,
         // so "list " does not equal "list" and is not a keyword with arguments.
         assertThrows(PeterException.class, () -> Parser.parse("list "));
     }
@@ -546,7 +546,7 @@ public class ParserTest {
 
     @Test
     public void parseTaskIndex_unknownCommandWord_exceptionThrown() {
-        // The index parser re-derives the command word, so an unrecognised one
+        // The index parser re-derives the command word, so an unrecognized one
         // fails here too.
         assertThrows(PeterException.class, () -> Parser.parseTaskIndex("blah 1", 5));
     }

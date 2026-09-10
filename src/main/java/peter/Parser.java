@@ -24,6 +24,32 @@ import peter.task.Todo;
  * Interprets user commands and converts their arguments into application data.
  */
 public final class Parser {
+    /** Command words the chatbot recognizes, as the user types them. */
+    private static final String COMMAND_BYE = "bye";
+    private static final String COMMAND_LIST = "list";
+    private static final String COMMAND_ON = "on";
+    private static final String COMMAND_FIND = "find";
+    private static final String COMMAND_TODO = "todo";
+    private static final String COMMAND_DEADLINE = "deadline";
+    private static final String COMMAND_EVENT = "event";
+    private static final String COMMAND_MARK = "mark";
+    private static final String COMMAND_UNMARK = "unmark";
+    private static final String COMMAND_DELETE = "delete";
+
+    /** Separates a command word from the arguments that follow it. */
+    private static final String ARGUMENT_SEPARATOR = " ";
+
+    /**
+     * Markers that introduce a scheduled task's dates, each with the spaces
+     * that surround it when a value follows.
+     */
+    private static final String MARKER_BY = " /by ";
+    private static final String MARKER_FROM = " /from ";
+    private static final String MARKER_TO = " /to ";
+
+    private static final String MESSAGE_UNKNOWN_COMMAND =
+            "I'm sorry, but I don't understand that command. Please try again.";
+
     private Parser() {
     }
 
@@ -36,14 +62,14 @@ public final class Parser {
      */
     public static Command parse(String command) throws PeterException {
         return switch (getCommandWord(command)) {
-            case "bye" -> new ExitCommand();
-            case "list" -> new ListCommand();
-            case "on" -> new FindOnDateCommand(parseQueryDate(command));
-            case "find" -> new FindCommand(parseKeyword(command));
-            case "todo", "deadline", "event" -> new AddCommand(parseTask(command));
-            case "mark" -> new MarkCommand(command, true);
-            case "unmark" -> new MarkCommand(command, false);
-            case "delete" -> new DeleteCommand(command);
+            case COMMAND_BYE -> new ExitCommand();
+            case COMMAND_LIST -> new ListCommand();
+            case COMMAND_ON -> new FindOnDateCommand(parseQueryDate(command));
+            case COMMAND_FIND -> new FindCommand(parseKeyword(command));
+            case COMMAND_TODO, COMMAND_DEADLINE, COMMAND_EVENT -> new AddCommand(parseTask(command));
+            case COMMAND_MARK -> new MarkCommand(command, true);
+            case COMMAND_UNMARK -> new MarkCommand(command, false);
+            case COMMAND_DELETE -> new DeleteCommand(command);
             default -> throw new AssertionError("Unhandled command word");
         };
     }
@@ -56,14 +82,13 @@ public final class Parser {
      * @throws PeterException if the command is not recognized.
      */
     private static String getCommandWord(String command) throws PeterException {
-        if (command.equals("bye") || command.equals("list")) {
+        if (command.equals(COMMAND_BYE) || command.equals(COMMAND_LIST)) {
             return command;
         }
 
-        return matchCommandWord(command,
-                "on", "find", "todo", "deadline", "event", "mark", "unmark", "delete")
-                .orElseThrow(() -> new PeterException(
-                        "I'm sorry, but I don't understand that command. Please try again."));
+        return matchCommandWord(command, COMMAND_ON, COMMAND_FIND, COMMAND_TODO,
+                COMMAND_DEADLINE, COMMAND_EVENT, COMMAND_MARK, COMMAND_UNMARK, COMMAND_DELETE)
+                .orElseThrow(() -> new PeterException(MESSAGE_UNKNOWN_COMMAND));
     }
 
     /**
@@ -87,7 +112,7 @@ public final class Parser {
     private static Optional<String> matchCommandWord(String command, String... commandWords) {
         return Arrays.stream(commandWords)
                 .filter(commandWord -> command.equals(commandWord)
-                        || command.startsWith(commandWord + " "))
+                        || command.startsWith(commandWord + ARGUMENT_SEPARATOR))
                 .findFirst();
     }
 
@@ -100,11 +125,10 @@ public final class Parser {
      */
     private static Task parseTask(String command) throws PeterException {
         return switch (getCommandWord(command)) {
-            case "todo" -> parseTodo(command);
-            case "deadline" -> parseDeadline(command);
-            case "event" -> parseEvent(command);
-            default -> throw new PeterException(
-                    "I'm sorry, but I don't understand that command. Please try again.");
+            case COMMAND_TODO -> parseTodo(command);
+            case COMMAND_DEADLINE -> parseDeadline(command);
+            case COMMAND_EVENT -> parseEvent(command);
+            default -> throw new PeterException(MESSAGE_UNKNOWN_COMMAND);
         };
     }
 
@@ -116,7 +140,11 @@ public final class Parser {
      * @throws PeterException if the date is missing or invalid.
      */
     private static LocalDate parseQueryDate(String command) throws PeterException {
-        String dateText = command.substring("on".length()).trim();
+        // The substring below drops a fixed number of characters, which is
+        // only the command word if parse() dispatched here on "on".
+        assert command.startsWith("on") : "parseQueryDate is only reached for an on command";
+
+        String dateText = getArguments(command, COMMAND_ON).trim();
         if (dateText.isEmpty()) {
             throw new PeterException("Use 'on <date>' (e.g., on 2019-12-02).");
         }
@@ -139,7 +167,9 @@ public final class Parser {
      * @throws PeterException if the keyword is missing.
      */
     private static String parseKeyword(String command) throws PeterException {
-        String keyword = command.substring("find".length()).trim();
+        assert command.startsWith("find") : "parseKeyword is only reached for a find command";
+
+        String keyword = getArguments(command, COMMAND_FIND).trim();
         if (keyword.isEmpty()) {
             throw new PeterException("Use 'find <keyword>' (e.g., find book).");
         }
@@ -158,8 +188,15 @@ public final class Parser {
      * @throws PeterException if the task number is missing or invalid.
      */
     public static int parseTaskIndex(String command, int taskCount) throws PeterException {
+        // A task count is a size, so a negative one could only come from a
+        // broken task list rather than from anything the user typed.
+        assert taskCount >= 0 : "task count must not be negative";
         String action = getCommandWord(command);
-        String taskNumberText = command.substring(action.length()).trim();
+        // getCommandWord matches on a prefix, so the command must begin with
+        // the word whose length is skipped here.
+        assert command.startsWith(action) : "command must start with its own command word";
+
+        String taskNumberText = getArguments(command, action).trim();
         if (taskNumberText.isEmpty()) {
             throw new PeterException("Oh dear! Please provide a task number to " + action + ".");
         }
@@ -180,9 +217,26 @@ public final class Parser {
         }
     }
 
+    /**
+     * Returns the text following a command word.
+     *
+     * <p>Only the single space that separates the command word from its
+     * arguments is dropped; any further spacing the user typed is left alone,
+     * so callers that care about it can decide for themselves whether to trim.
+     *
+     * @param command complete command entered by the user.
+     * @param commandWord command word the command starts with.
+     * @return argument text, which is empty when the command has no arguments.
+     */
+    private static String getArguments(String command, String commandWord) {
+        String arguments = command.substring(commandWord.length());
+        return arguments.startsWith(ARGUMENT_SEPARATOR) ? arguments.substring(1) : arguments;
+    }
+
     private static Todo parseTodo(String command) throws PeterException {
-        String description = command.length() == "todo".length()
-                ? "" : command.substring("todo ".length());
+        assert command.startsWith("todo") : "parseTodo is only reached for a todo command";
+
+        String description = getArguments(command, COMMAND_TODO);
         if (description.isBlank()) {
             throw new PeterException("Please include a description after 'todo'.");
         }
@@ -190,20 +244,37 @@ public final class Parser {
         return new Todo(description);
     }
 
+    /**
+     * Returns whether the command ends with a marker that has no value after
+     * it, such as a deadline ending in {@code /by}.
+     *
+     * <p>The trailing space is stripped from the marker, since a marker at the
+     * very end of the command is not followed by one.
+     *
+     * @param command complete command entered by the user.
+     * @param marker marker to look for, with its surrounding spaces.
+     * @return whether the command ends with the marker and nothing else.
+     */
+    private static boolean endsWithValuelessMarker(String command, String marker) {
+        return command.endsWith(marker.stripTrailing());
+    }
+
     private static Deadline parseDeadline(String command) throws PeterException {
-        int byMarkerIndex = command.indexOf(" /by ");
+        assert command.startsWith("deadline") : "parseDeadline is only reached for a deadline command";
+
+        int byMarkerIndex = command.indexOf(MARKER_BY);
         if (byMarkerIndex == -1) {
-            if (command.endsWith(" /by")) {
+            if (endsWithValuelessMarker(command, MARKER_BY)) {
                 throw new PeterException("Please include a due date after '/by'.");
             }
             throw new PeterException("Use 'deadline <description> /by <date>'.");
         }
-        if (byMarkerIndex <= "deadline".length()) {
+        if (byMarkerIndex <= COMMAND_DEADLINE.length()) {
             throw new PeterException("Please include a description before '/by'.");
         }
 
-        String description = command.substring("deadline ".length(), byMarkerIndex);
-        String dueDate = command.substring(byMarkerIndex + " /by ".length());
+        String description = getArguments(command.substring(0, byMarkerIndex), COMMAND_DEADLINE);
+        String dueDate = command.substring(byMarkerIndex + MARKER_BY.length());
         if (description.isBlank()) {
             throw new PeterException("Please include a description before '/by'.");
         }
@@ -215,28 +286,30 @@ public final class Parser {
     }
 
     private static Event parseEvent(String command) throws PeterException {
-        int fromMarkerIndex = command.indexOf(" /from ");
-        int toMarkerIndex = command.indexOf(" /to ");
+        assert command.startsWith("event") : "parseEvent is only reached for an event command";
+
+        int fromMarkerIndex = command.indexOf(MARKER_FROM);
+        int toMarkerIndex = command.indexOf(MARKER_TO);
         if (fromMarkerIndex == -1 || toMarkerIndex == -1 || fromMarkerIndex >= toMarkerIndex) {
-            if (command.endsWith(" /from")) {
+            if (endsWithValuelessMarker(command, MARKER_FROM)) {
                 throw new PeterException("Please include a start date after '/from'.");
             }
-            if (command.endsWith(" /to")) {
+            if (endsWithValuelessMarker(command, MARKER_TO)) {
                 throw new PeterException("Please include an end date after '/to'.");
             }
             throw new PeterException(
                     "Use 'event <description> /from <start-date> /to <end-date>'.");
         }
-        if (fromMarkerIndex <= "event".length()) {
+        if (fromMarkerIndex <= COMMAND_EVENT.length()) {
             throw new PeterException("Please include a description before '/from'.");
         }
-        if (toMarkerIndex <= fromMarkerIndex + " /from ".length()) {
+        if (toMarkerIndex <= fromMarkerIndex + MARKER_FROM.length()) {
             throw new PeterException("Please include a start date after '/from'.");
         }
 
-        String description = command.substring("event ".length(), fromMarkerIndex);
-        String startDate = command.substring(fromMarkerIndex + " /from ".length(), toMarkerIndex);
-        String endDate = command.substring(toMarkerIndex + " /to ".length());
+        String description = getArguments(command.substring(0, fromMarkerIndex), COMMAND_EVENT);
+        String startDate = command.substring(fromMarkerIndex + MARKER_FROM.length(), toMarkerIndex);
+        String endDate = command.substring(toMarkerIndex + MARKER_TO.length());
         if (description.isBlank()) {
             throw new PeterException("Please include a description before '/from'.");
         }
@@ -276,8 +349,9 @@ public final class Parser {
      * stops at the first offending field rather than testing the rest.
      */
     private static void validateStorageFields(String... fields) throws PeterException {
-        if (Arrays.stream(fields).anyMatch(field -> field.contains(" | "))) {
-            throw new PeterException("Oh dear! Task details cannot contain ' | '.");
+        if (Arrays.stream(fields).anyMatch(field -> field.contains(Task.FIELD_DELIMITER))) {
+            throw new PeterException(
+                    "Oh dear! Task details cannot contain '" + Task.FIELD_DELIMITER + "'.");
         }
     }
 }
