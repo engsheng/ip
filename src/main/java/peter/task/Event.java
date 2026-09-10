@@ -2,6 +2,7 @@ package peter.task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Represents an event occurring between two dates and times.
@@ -40,12 +41,11 @@ public class Event extends Task {
     /**
      * {@inheritDoc}
      *
-     * <p>Both ends are written in ISO form so that they can be read back
-     * exactly, rather than in the friendlier display format.
+     * <p>An event stores both of its ends, the start before the end.
      */
     @Override
-    public String toDataString() {
-        return "E | " + (isDone ? 1 : 0) + " | " + description + " | " + from + " | " + to;
+    protected List<String> getScheduleDataFields() {
+        return List.of(from.toString(), to.toString());
     }
 
     /**

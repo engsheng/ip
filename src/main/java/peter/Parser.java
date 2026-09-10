@@ -322,8 +322,9 @@ public final class Parser {
     /** Rejects the delimiter used to separate fields in the data file. */
     private static void validateStorageFields(String... fields) throws PeterException {
         for (String field : fields) {
-            if (field.contains(" | ")) {
-                throw new PeterException("Oh dear! Task details cannot contain ' | '.");
+            if (field.contains(Task.FIELD_DELIMITER)) {
+                throw new PeterException(
+                        "Oh dear! Task details cannot contain '" + Task.FIELD_DELIMITER + "'.");
             }
         }
     }

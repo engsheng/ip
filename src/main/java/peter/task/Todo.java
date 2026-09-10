@@ -1,5 +1,7 @@
 package peter.task;
 
+import java.util.List;
+
 /**
  * Represents a task with no date attached to it.
  *
@@ -29,11 +31,11 @@ public class Todo extends Task {
     /**
      * {@inheritDoc}
      *
-     * <p>A todo line holds only the type, status, and description, giving the
-     * three fields {@code Storage} expects for type {@code T}.
+     * <p>Returns no fields, since a todo has no schedule. Its line therefore
+     * holds only the type, status, and description.
      */
     @Override
-    public String toDataString() {
-        return "T | " + (isDone ? 1 : 0) + " | " + description;
+    protected List<String> getScheduleDataFields() {
+        return List.of();
     }
 }

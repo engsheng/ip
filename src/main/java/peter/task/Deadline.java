@@ -2,6 +2,7 @@ package peter.task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Represents a task that must be completed by a particular date and time.
@@ -33,12 +34,11 @@ public class Deadline extends Task {
     /**
      * {@inheritDoc}
      *
-     * <p>The due date is written in ISO form so that it can be read back
-     * exactly, rather than in the friendlier display format.
+     * <p>A deadline stores the single date it is due by.
      */
     @Override
-    public String toDataString() {
-        return "D | " + (isDone ? 1 : 0) + " | " + description + " | " + by;
+    protected List<String> getScheduleDataFields() {
+        return List.of(by.toString());
     }
 
     /**

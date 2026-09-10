@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import peter.PeterException;
 import peter.task.Deadline;
@@ -67,8 +68,9 @@ public final class Storage {
     }
 
     private static Task parseTask(String taskLine, int lineNumber) throws PeterException {
-        String[] taskParts = taskLine.split(" \\| ", -1);
-        if (taskParts.length < 2 || (!taskParts[1].equals("0") && !taskParts[1].equals("1"))) {
+        String[] taskParts = taskLine.split(Pattern.quote(Task.FIELD_DELIMITER), -1);
+        if (taskParts.length < 2 || (!taskParts[1].equals(Task.STATUS_FLAG_NOT_DONE)
+                && !taskParts[1].equals(Task.STATUS_FLAG_DONE))) {
             throw invalidDataException(lineNumber);
         }
 
@@ -96,7 +98,7 @@ public final class Storage {
         } catch (DateTimeParseException e) {
             throw invalidDataException(lineNumber);
         }
-        if (taskParts[1].equals("1")) {
+        if (taskParts[1].equals(Task.STATUS_FLAG_DONE)) {
             task.markAsDone();
         }
         return task;
