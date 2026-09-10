@@ -109,14 +109,17 @@ public class TodoTest {
     @Test
     public void hasKeyword_emptyKeyword_trueReturned() {
         // Every string contains the empty string. Parser rejects a blank
-        // keyword before this point, so this only documents the behavior.
+        // search before this point and never produces an empty keyword, so
+        // this only documents the behavior.
         assertTrue(new Todo("read book").hasKeyword(""));
     }
 
     @Test
     public void hasKeyword_keywordWithSpaces_matchedLiterally() {
-        // A multi-word keyword is one search term, so it must appear
-        // contiguously rather than as separate words.
+        // This method tests a single keyword, so a string with a space in it
+        // must appear contiguously. The find command splits its arguments into
+        // separate keywords before calling this, so "find read book" does
+        // match the description below.
         Todo todo = new Todo("read a book");
         assertTrue(todo.hasKeyword("a book"));
         assertFalse(todo.hasKeyword("read book"));

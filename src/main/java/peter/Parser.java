@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import peter.command.AddCommand;
@@ -65,7 +66,7 @@ public final class Parser {
             case COMMAND_BYE -> new ExitCommand();
             case COMMAND_LIST -> new ListCommand();
             case COMMAND_ON -> new FindOnDateCommand(parseQueryDate(command));
-            case COMMAND_FIND -> new FindCommand(parseKeyword(command));
+            case COMMAND_FIND -> new FindCommand(parseKeywords(command));
             case COMMAND_TODO, COMMAND_DEADLINE, COMMAND_EVENT -> new AddCommand(parseTask(command));
             case COMMAND_MARK -> new MarkCommand(command, true);
             case COMMAND_UNMARK -> new MarkCommand(command, false);
@@ -157,23 +158,30 @@ public final class Parser {
     }
 
     /**
-     * Extracts the keyword requested by a {@code find} command.
+     * Extracts the keywords requested by a {@code find} command.
      *
-     * <p>The keyword is not checked against the storage delimiter, since a
+     * <p>The arguments are split on runs of whitespace, so leading, trailing
+     * and repeated spaces are insignificant and each word becomes its own
+     * keyword. A blank argument is rejected here, which is what guarantees the
+     * returned list is never empty.
+     *
+     * <p>The keywords are not checked against the storage delimiter, since a
      * search term is never written to the data file.
      *
      * @param command complete find command.
-     * @return keyword to search descriptions for.
-     * @throws PeterException if the keyword is missing.
+     * @return keywords to search descriptions for, in the order typed.
+     * @throws PeterException if no keyword is given.
      */
-    private static String parseKeyword(String command) throws PeterException {
-        assert command.startsWith("find") : "parseKeyword is only reached for a find command";
+    private static List<String> parseKeywords(String command) throws PeterException {
+        assert command.startsWith("find") : "parseKeywords is only reached for a find command";
 
-        String keyword = getArguments(command, COMMAND_FIND).trim();
-        if (keyword.isEmpty()) {
-            throw new PeterException("Use 'find <keyword>' (e.g., find book).");
+        String keywords = getArguments(command, COMMAND_FIND).trim();
+        if (keywords.isEmpty()) {
+            throw new PeterException("Use 'find <keywords>' (e.g., find read book).");
         }
-        return keyword;
+        // Splitting a trimmed, non-empty string never yields an empty element,
+        // so no keyword can be blank.
+        return List.of(keywords.split("\\s+"));
     }
 
     /**
