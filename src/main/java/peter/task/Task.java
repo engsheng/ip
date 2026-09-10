@@ -26,8 +26,8 @@ public abstract class Task {
     /**
      * Creates a task that starts out incomplete.
      *
-     * @param description what the task says
-     * @param type kind of task being created
+     * @param description what the task says.
+     * @param type kind of task being created.
      */
     public Task(String description, TaskType type) {
         this.description = description;
@@ -70,7 +70,7 @@ public abstract class Task {
      * leading space and brackets, or an empty string for a task with no
      * schedule.
      *
-     * @return displayable schedule text
+     * @return displayable schedule text.
      */
     public abstract String getScheduleDetails();
 

@@ -17,9 +17,9 @@ public class Event extends Task {
      * {@code to}; {@code Parser} rejects a backwards event before reaching
      * here, because such an event would cover no dates at all.
      *
-     * @param description what the task says
-     * @param from date and time the event starts
-     * @param to date and time the event ends
+     * @param description what the task says.
+     * @param from date and time the event starts.
+     * @param to date and time the event ends.
      */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description, TaskType.EVENT);
@@ -55,8 +55,8 @@ public class Event extends Task {
      * multi-day event matches every date it spans regardless of the times of
      * day it starts and finishes.
      *
-     * @param date date to check
-     * @return whether the event runs on the date
+     * @param date date to check.
+     * @return whether the event runs on the date.
      */
     @Override
     public boolean occursOn(LocalDate date) {

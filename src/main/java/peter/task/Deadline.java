@@ -12,9 +12,9 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline.
      *
-     * @param description what the task says
+     * @param description what the task says.
      * @param by date and time the task is due, at midnight if the user gave
-     *     only a date
+     *     only a date.
      */
     public Deadline(String description, LocalDateTime by) {
         super(description, TaskType.DEADLINE);
@@ -47,8 +47,8 @@ public class Deadline extends Task {
      * <p>Only the date is compared, so a deadline due at any time of day
      * matches its own date and no other.
      *
-     * @param date date to check
-     * @return whether the task is due on the date
+     * @param date date to check.
+     * @return whether the task is due on the date.
      */
     @Override
     public boolean occursOn(LocalDate date) {
