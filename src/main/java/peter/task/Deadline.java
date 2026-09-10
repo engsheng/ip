@@ -8,18 +8,18 @@ import java.util.List;
  * Represents a task that must be completed by a particular date and time.
  */
 public class Deadline extends Task {
-    private final LocalDateTime by;
+    private final LocalDateTime dueDateTime;
 
     /**
      * Creates an incomplete deadline.
      *
      * @param description what the task says.
-     * @param by date and time the task is due, at midnight if the user gave
-     *     only a date.
+     * @param dueDateTime date and time the task is due, at midnight if the
+     *     user gave only a date.
      */
-    public Deadline(String description, LocalDateTime by) {
+    public Deadline(String description, LocalDateTime dueDateTime) {
         super(description, TaskType.DEADLINE);
-        this.by = by;
+        this.dueDateTime = dueDateTime;
     }
 
     /**
@@ -28,7 +28,7 @@ public class Deadline extends Task {
      */
     @Override
     public String getScheduleDetails() {
-        return " (by: " + ScheduleDateTime.format(by) + ")";
+        return " (by: " + ScheduleDateTime.format(dueDateTime) + ")";
     }
 
     /**
@@ -38,7 +38,7 @@ public class Deadline extends Task {
      */
     @Override
     protected List<String> getScheduleDataFields() {
-        return List.of(by.toString());
+        return List.of(dueDateTime.toString());
     }
 
     /**
@@ -52,6 +52,6 @@ public class Deadline extends Task {
      */
     @Override
     public boolean occursOn(LocalDate date) {
-        return by.toLocalDate().equals(date);
+        return dueDateTime.toLocalDate().equals(date);
     }
 }
