@@ -15,6 +15,7 @@ import peter.task.Deadline;
 import peter.task.Event;
 import peter.task.ScheduleDateTime;
 import peter.task.Task;
+import peter.task.TaskType;
 import peter.task.Todo;
 
 /**
@@ -71,13 +72,9 @@ public final class Storage {
             throw invalidDataException(lineNumber);
         }
 
-        int expectedPartCount = switch (taskParts[0]) {
-            case "T" -> 3;
-            case "D" -> 4;
-            case "E" -> 5;
-            default -> throw invalidDataException(lineNumber);
-        };
-        if (taskParts.length != expectedPartCount) {
+        TaskType taskType = TaskType.fromIcon(taskParts[0])
+                .orElseThrow(() -> invalidDataException(lineNumber));
+        if (taskParts.length != taskType.getDataFieldCount()) {
             throw invalidDataException(lineNumber);
         }
         for (int i = 2; i < taskParts.length; i++) {
@@ -88,14 +85,13 @@ public final class Storage {
 
         Task task;
         try {
-            task = switch (taskParts[0]) {
-                case "T" -> new Todo(taskParts[2]);
-                case "D" -> new Deadline(taskParts[2],
+            task = switch (taskType) {
+                case TODO -> new Todo(taskParts[2]);
+                case DEADLINE -> new Deadline(taskParts[2],
                         ScheduleDateTime.parseStoredValue(taskParts[3]));
-                case "E" -> new Event(taskParts[2],
+                case EVENT -> new Event(taskParts[2],
                         ScheduleDateTime.parseStoredValue(taskParts[3]),
                         ScheduleDateTime.parseStoredValue(taskParts[4]));
-                default -> throw invalidDataException(lineNumber);
             };
         } catch (DateTimeParseException e) {
             throw invalidDataException(lineNumber);
