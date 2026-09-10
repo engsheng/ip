@@ -143,6 +143,11 @@ public final class Storage {
      * Replaces the data file atomically when supported by the file system.
      */
     private void moveTemporaryFileIntoPlace() throws IOException {
+        // Replacing the data file is only safe once the replacement exists in
+        // full. Calling this before the temporary file has been written would
+        // destroy the saved tasks instead of updating them.
+        assert Files.exists(temporaryDataFile) : "the temporary file must be written before it is moved";
+
         try {
             Files.move(temporaryDataFile, dataFile,
                     StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);

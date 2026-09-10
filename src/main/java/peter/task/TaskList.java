@@ -50,6 +50,7 @@ public class TaskList {
      * @return task at the index.
      */
     public Task get(int index) {
+        assert isExistingIndex(index) : "task index out of range: " + index;
         return tasks.get(index);
     }
 
@@ -59,6 +60,7 @@ public class TaskList {
      * @param task task to add.
      */
     public void add(Task task) {
+        assert task != null : "the task list must not hold a null task";
         tasks.add(task);
     }
 
@@ -69,6 +71,11 @@ public class TaskList {
      * @param task task to insert.
      */
     public void add(int index, Task task) {
+        assert task != null : "the task list must not hold a null task";
+        // Unlike the other index methods this one also accepts the position
+        // just past the end, which is where a task deleted from the end of
+        // the list is put back.
+        assert index >= 0 && index <= tasks.size() : "insertion index out of range: " + index;
         tasks.add(index, task);
     }
 
@@ -79,6 +86,7 @@ public class TaskList {
      * @return removed task.
      */
     public Task delete(int index) {
+        assert isExistingIndex(index) : "task index out of range: " + index;
         return tasks.remove(index);
     }
 
@@ -89,6 +97,7 @@ public class TaskList {
      * @param isDone new completion status.
      */
     public void setDone(int index, boolean isDone) {
+        assert isExistingIndex(index) : "task index out of range: " + index;
         if (isDone) {
             tasks.get(index).markAsDone();
         } else {
@@ -103,5 +112,20 @@ public class TaskList {
      */
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);
+    }
+
+    /**
+     * Returns whether an index refers to a task currently in the list.
+     *
+     * <p>Used only by the assertions above, which record that a caller is
+     * expected to have validated its task number through
+     * {@link peter.Parser#parseTaskIndex} already. An out-of-range index here
+     * is therefore a bug in the calling command, not a user mistake.
+     *
+     * @param index zero-based index to check.
+     * @return whether a task exists at the index.
+     */
+    private boolean isExistingIndex(int index) {
+        return index >= 0 && index < tasks.size();
     }
 }

@@ -41,6 +41,10 @@ public class MarkCommand extends Command {
         int taskIndex = Parser.parseTaskIndex(command, tasks.size());
         boolean wasDone = tasks.get(taskIndex).isDone();
         tasks.setDone(taskIndex, isDone);
+        // The message shown at the end reports the requested status, so it
+        // would be a lie if the task did not actually take that status.
+        assert tasks.get(taskIndex).isDone() == isDone : "the task must hold the requested status";
+
         saveOrRollback(tasks, storage, () -> tasks.setDone(taskIndex, wasDone));
         ui.showTaskStatusChange(tasks.get(taskIndex), isDone);
     }

@@ -54,6 +54,11 @@ dependencies {
 test {
     useJUnitPlatform()
 
+    // True by default for a Gradle test task, but stated here because some
+    // tests now expect an AssertionError from an assert statement, which the
+    // JVM would skip entirely without -ea.
+    enableAssertions = true
+
     testLogging {
         events 'passed', 'skipped', 'failed'
 
@@ -85,4 +90,9 @@ shadowJar {
 
 run {
     standardInput = System.in
+
+    // The JVM ignores assert statements unless -ea is passed, and a JavaExec
+    // task does not pass it by default, so a broken assumption would go
+    // unnoticed here. Gradle's test tasks already enable assertions.
+    enableAssertions = true
 }
