@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link Todo}, and through it the completion-status behaviour
+ * Unit tests for {@link Todo}, and through it the completion-status behavior
  * inherited from {@link Task}.
  *
  * <p>{@code Todo} is the simplest concrete task, which makes it the natural
@@ -82,7 +82,7 @@ public class TodoTest {
     @Test
     public void hasKeyword_differentCase_trueReturned() {
         // Searching is case-insensitive, so the user need not match the
-        // capitalisation they originally typed.
+        // capitalization they originally typed.
         Todo todo = new Todo("Read Book");
         assertTrue(todo.hasKeyword("book"));
         assertTrue(todo.hasKeyword("BOOK"));
@@ -109,7 +109,7 @@ public class TodoTest {
     @Test
     public void hasKeyword_emptyKeyword_trueReturned() {
         // Every string contains the empty string. Parser rejects a blank
-        // keyword before this point, so this only documents the behaviour.
+        // keyword before this point, so this only documents the behavior.
         assertTrue(new Todo("read book").hasKeyword(""));
     }
 

@@ -158,7 +158,7 @@ public class Peter {
      * <p>The path is relative, so tasks are saved under the directory the
      * program is launched from.
      *
-     * @param args ignored; the data file location is fixed
+     * @param args ignored; the data file location is fixed.
      */
     public static void main(String[] args) {
         new Peter("data/peter.txt").run();
