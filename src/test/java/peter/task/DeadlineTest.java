@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link Deadline}.
  *
- * <p>The interesting behaviour is that {@link Deadline#occursOn(LocalDate)}
+ * <p>The interesting behavior is that {@link Deadline#occursOn(LocalDate)}
  * compares dates only, so a deadline at any time of day still matches its own
  * date. {@code toDataString} is covered because it defines the save format.
  */

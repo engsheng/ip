@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link TaskList}.
  *
  * <p>Most methods here delegate straight to {@link ArrayList}, so the tests
- * concentrate on the parts that are genuinely this class's own behaviour: the
+ * concentrate on the parts that are genuinely this class's own behavior: the
  * defensive copy in the constructor, the unmodifiable view returned by
  * {@code asList}, index-based insertion used to undo a failed deletion, and
  * the index bounds that protect the rest of the app.
