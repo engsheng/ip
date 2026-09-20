@@ -63,6 +63,49 @@ Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
+## Test case: list an empty task web
+
+**Aim:** Verify that `list` gives a helpful response when there are no tasks
+instead of displaying an empty list heading.
+
+**Command:**
+
+```text
+.\gradlew.bat compileJava
+$uiTestBuildDirectory = (Resolve-Path 'build\classes\java\main').Path
+$uiTestRunDirectory = Join-Path $env:TEMP ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Force -Path $uiTestRunDirectory | Out-Null
+Set-Location $uiTestRunDirectory
+java -ea -cp $uiTestBuildDirectory peter.Peter
+```
+
+**Inputs:**
+
+```text
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ ____      _
+|  _ \ ___| |_ ___ _ __
+| |_) / _ \ __/ _ \ '__|
+|  __/  __/ ||  __/ |
+|_|   \___|\__\___|_|
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
+____________________________________________________________
+____________________________________________________________
+Your task web is empty. Add a task to get started!
+____________________________________________________________
+____________________________________________________________
+Swing by again soon. Your task web will be right here!
+____________________________________________________________
+```
+
 ## Test case: load saved tasks at startup
 
 **Aim:** Verify that todo, deadline, and event tasks are loaded from a UTF-8
@@ -713,7 +756,7 @@ Snip! This task is off the web:
 You've got 0 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Here's what's caught in your task web:
+Your task web is empty. Add a task to get started!
 ____________________________________________________________
 ____________________________________________________________
 Swing by again soon. Your task web will be right here!
@@ -1036,7 +1079,7 @@ ____________________________________________________________
 Oh dear! I couldn't save your tasks. Please check that the data folder is writable.
 ____________________________________________________________
 ____________________________________________________________
-Here's what's caught in your task web:
+Your task web is empty. Add a task to get started!
 ____________________________________________________________
 ____________________________________________________________
 Swing by again soon. Your task web will be right here!
@@ -1091,7 +1134,7 @@ ____________________________________________________________
 Oh dear! Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
-Here's what's caught in your task web:
+Your task web is empty. Add a task to get started!
 ____________________________________________________________
 ____________________________________________________________
 Swing by again soon. Your task web will be right here!
@@ -1111,7 +1154,7 @@ by the console cases above.
 | # | Check | Expected |
 |---|---|---|
 | 1 | Open the window | A window titled "Peter - Friendly Neighborhood Task Buddy" appears with a red spider-mask application icon. The red-and-blue web background fills the entire conversation viewport immediately, including space below the greeting. No banner or divider lines: those belong to the console. |
-| 2 | Type `list` and press Enter | Your command appears on the right with your picture; the reply appears on the left with Peter's original avatar. The input box clears. |
+| 2 | Type `list` with no saved tasks and press Enter | Your command appears on the right with your picture; Peter replies `Your task web is empty. Add a task to get started!` on the left. The input box clears. |
 | 3 | Click **Send** with text in the box | Behaves exactly as pressing Enter did. |
 | 4 | Press Enter on an empty box | Nothing is added to the transcript. |
 | 5 | Add a task with a very long description, then `list` | The reply wraps onto several lines. No text is cut off at the right edge. |

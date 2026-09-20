@@ -46,6 +46,12 @@ public class PeterTest {
     }
 
     @Test
+    public void getResponse_listEmpty_emptyMessageReturned() {
+        assertEquals("Your task web is empty. Add a task to get started!",
+                peter.getResponse("list"));
+    }
+
+    @Test
     public void getResponse_findWithKeywordsSpreadApart_taskFound() {
         // The keywords need not be adjacent in the description, which is what
         // a single literal search term could not do.

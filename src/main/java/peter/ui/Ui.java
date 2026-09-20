@@ -128,6 +128,11 @@ public class Ui {
      * @param tasks tasks to display.
      */
     public void showTaskList(TaskList tasks) {
+        if (tasks.size() == 0) {
+            out.println("Your task web is empty. Add a task to get started!");
+            return;
+        }
+
         out.println("Here's what's caught in your task web:");
         for (int i = 0; i < tasks.size(); i++) {
             showNumberedTask(i, tasks.get(i));
