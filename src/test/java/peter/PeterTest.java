@@ -33,7 +33,7 @@ public class PeterTest {
 
     @Test
     public void getGreeting_freshStart_greetingWithoutBannerReturned() {
-        assertEquals("Yo! I'm Peter.\nWhat crazy adventures are we making today?",
+        assertEquals("Hey! I'm Peter, your friendly neighborhood task buddy.\nWhat's on the web today?",
                 peter.getGreeting().replace("\r\n", "\n"));
     }
 
@@ -41,7 +41,7 @@ public class PeterTest {
     public void getResponse_addThenList_taskListReturned() {
         peter.getResponse("todo read book");
 
-        assertEquals("Here are the tasks in your list:\n1.[T][ ] read book",
+        assertEquals("Here's what's caught in your task web:\n1.[T][ ] read book",
                 peter.getResponse("list").replace("\r\n", "\n"));
     }
 
@@ -51,7 +51,7 @@ public class PeterTest {
         // a single literal search term could not do.
         peter.getResponse("todo read a book");
 
-        assertEquals("Here are the matching tasks in your list:\n1.[T][ ] read a book",
+        assertEquals("My spider-sense found these matches:\n1.[T][ ] read a book",
                 peter.getResponse("find read book").replace("\r\n", "\n"));
     }
 
@@ -61,13 +61,13 @@ public class PeterTest {
         peter.getResponse("todo read book");
         peter.getResponse("todo buy milk");
 
-        assertEquals("There are no matching tasks in your list.",
+        assertEquals("My spider-sense couldn't find a match.",
                 peter.getResponse("find book milk").replace("\r\n", "\n"));
     }
 
     @Test
     public void getResponse_unknownCommand_errorMessageReturned() {
-        assertEquals("I'm sorry, but I don't understand that command. Please try again.",
+        assertEquals("My spider-sense doesn't recognize that command. Please try again.",
                 peter.getResponse("blah"));
     }
 

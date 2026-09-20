@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane minHeight="360.0" minWidth="320.0" prefHeight="600.0" prefWidth="400.0"
+            stylesheets="@../styles/peter-theme.css" styleClass="main-window"
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="peter.gui.MainWindow">
   <center>
@@ -17,14 +18,16 @@
     <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
                 vbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
       <content>
-        <VBox fx:id="dialogContainer" fillWidth="true" spacing="2.0" />
+        <VBox fx:id="dialogContainer" fillWidth="true" spacing="2.0"
+              styleClass="dialog-container" />
       </content>
     </ScrollPane>
   </center>
   <bottom>
     <!-- Both the text field and the button call the same handler, so Enter and
          a click send a command in exactly the same way. -->
-    <HBox alignment="CENTER" spacing="8.0" BorderPane.alignment="CENTER">
+    <HBox alignment="CENTER" spacing="8.0" styleClass="command-bar"
+          BorderPane.alignment="CENTER">
       <children>
         <TextField fx:id="userInput" onAction="#handleUserInput"
                    promptText="Enter a command..." HBox.hgrow="ALWAYS" />

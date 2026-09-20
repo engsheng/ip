@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import peter.Peter;
 
@@ -30,7 +31,8 @@ public class Main extends Application {
             loader.<MainWindow>getController().setPeter(peter);
 
             stage.setScene(new Scene(root));
-            stage.setTitle("Peter");
+            stage.setTitle("Peter - Friendly Neighborhood Task Buddy");
+            stage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/SpiderIcon.png")));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

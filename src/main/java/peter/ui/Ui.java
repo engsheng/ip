@@ -63,8 +63,8 @@ public class Ui {
      * only suit a console.
      */
     public void showGreeting() {
-        showLines("Yo! I'm Peter.",
-                "What crazy adventures are we making today?");
+        showLines("Hey! I'm Peter, your friendly neighborhood task buddy.",
+                "What's on the web today?");
     }
 
     /**
@@ -93,7 +93,7 @@ public class Ui {
      * Displays the application's farewell message.
      */
     public void showGoodbye() {
-        out.println("Bye. Hope to see you again soon!");
+        out.println("Swing by again soon. Your task web will be right here!");
     }
 
     /**
@@ -128,7 +128,7 @@ public class Ui {
      * @param tasks tasks to display.
      */
     public void showTaskList(TaskList tasks) {
-        out.println("Here are the tasks in your list:");
+        out.println("Here's what's caught in your task web:");
         for (int i = 0; i < tasks.size(); i++) {
             showNumberedTask(i, tasks.get(i));
         }
@@ -141,7 +141,7 @@ public class Ui {
      * @param taskCount number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
-        showLines("Got it. I've added this task:",
+        showLines("Thwip! This task is on the web:",
                 "  " + formatTask(task));
         showTaskCount(taskCount);
     }
@@ -153,7 +153,7 @@ public class Ui {
      * @param taskCount number of tasks after the removal.
      */
     public void showRemovedTask(Task task, int taskCount) {
-        showLines("Noted. I've removed this task:",
+        showLines("Snip! This task is off the web:",
                 "  " + formatTask(task));
         showTaskCount(taskCount);
     }
@@ -166,9 +166,9 @@ public class Ui {
      */
     public void showTaskStatusChange(Task task, boolean isDone) {
         if (isDone) {
-            out.println("Nice! I've marked this task as done:");
+            out.println("Amazing! This task is wrapped up:");
         } else {
-            out.println("OK, I've marked this task as not done yet:");
+            out.println("Back on the web! This task is active again:");
         }
         out.println("  [" + task.getStatusIcon() + "] " + task.getDescription());
     }
@@ -183,8 +183,8 @@ public class Ui {
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
         String dateText = ScheduleDateTime.format(date);
         showFilteredTasks(tasks, task -> task.occursOn(date),
-                "Here are the scheduled tasks on " + dateText + ":",
-                "There are no scheduled tasks on " + dateText + ".");
+                "Tasks swinging in on " + dateText + ":",
+                "No tasks are swinging in on " + dateText + ".");
     }
 
     /**
@@ -199,8 +199,8 @@ public class Ui {
      */
     public void showMatchingTasks(TaskList tasks, Predicate<Task> isMatch) {
         showFilteredTasks(tasks, isMatch,
-                "Here are the matching tasks in your list:",
-                "There are no matching tasks in your list.");
+                "My spider-sense found these matches:",
+                "My spider-sense couldn't find a match.");
     }
 
     /**
@@ -241,7 +241,8 @@ public class Ui {
 
     /** Reports how many tasks the list now holds. */
     private void showTaskCount(int taskCount) {
-        out.println("Now you have " + taskCount + " tasks in the list.");
+        String taskLabel = taskCount == 1 ? "task" : "tasks";
+        out.println("You've got " + taskCount + " " + taskLabel + " on the web.");
     }
 
     /**
