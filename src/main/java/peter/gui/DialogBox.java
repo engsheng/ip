@@ -53,6 +53,9 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
+        // Keeping messages narrower than the transcript leaves a clear visual
+        // margin between speakers and makes long replies easier to scan.
+        dialog.maxWidthProperty().bind(widthProperty().multiply(0.75));
         displayPicture.setImage(image);
     }
 
