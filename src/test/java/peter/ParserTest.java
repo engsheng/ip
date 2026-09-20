@@ -87,7 +87,7 @@ public class ParserTest {
     public void parse_unknownCommand_exceptionThrown() {
         PeterException exception = assertThrows(PeterException.class, () ->
                 Parser.parse("blah"));
-        assertEquals("I'm sorry, but I don't understand that command. Please try again.",
+        assertEquals("My spider-sense doesn't recognize that command. Please try again.",
                 exception.getMessage());
     }
 

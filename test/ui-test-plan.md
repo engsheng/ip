@@ -52,14 +52,14 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Please include a description after 'todo'.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -104,17 +104,17 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 1.[T][X] read book
 2.[D][ ] return book (by: Jun 6 2019, 6:00 PM)
 3.[E][X] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -156,8 +156,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Oh dear! Please provide a task number to mark.
@@ -166,9 +166,9 @@ ____________________________________________________________
 Oh dear! There are no tasks to unmark.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [T][ ] read
-Now you have 1 tasks in the list.
+You've got 1 task on the web.
 ____________________________________________________________
 ____________________________________________________________
 Oh dear! Please enter an integer task number to mark.
@@ -183,7 +183,7 @@ ____________________________________________________________
 Oh dear! Task number must be between 1 and 1.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -227,8 +227,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Use 'event <description> /from <start-date> /to <end-date>'.
@@ -249,16 +249,16 @@ ____________________________________________________________
 Please make sure the end date is not before the start date.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [E][ ] camp (from: Dec 2 2019 to: Dec 2 2019)
-Now you have 1 tasks in the list.
+You've got 1 task on the web.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 1.[E][ ] camp (from: Dec 2 2019 to: Dec 2 2019)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -296,8 +296,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Use 'deadline <description> /by <date>'.
@@ -309,7 +309,7 @@ ____________________________________________________________
 Please include a due date after '/by'.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -349,8 +349,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Please enter the due date as yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).
@@ -359,22 +359,22 @@ ____________________________________________________________
 Please enter the end date as yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2019-10-15 or 2/12/2019 1800).
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-Now you have 1 tasks in the list.
+You've got 1 task on the web.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [E][ ] holiday (from: Dec 1 2019, 9:00 AM to: Dec 2 2019, 5:30 PM)
-Now you have 2 tasks in the list.
+You've got 2 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 1.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
 2.[E][ ] holiday (from: Dec 1 2019, 9:00 AM to: Dec 2 2019, 5:30 PM)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -425,8 +425,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Use 'on <date>' (e.g., on 2019-12-02).
@@ -435,20 +435,20 @@ ____________________________________________________________
 Please enter the date in yyyy-MM-dd format (e.g., 2019-12-02).
 ____________________________________________________________
 ____________________________________________________________
-Here are the scheduled tasks on Dec 2 2019:
+Tasks swinging in on Dec 2 2019:
 2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
 3.[E][X] holiday (from: Dec 1 2019, 9:00 AM to: Dec 3 2019, 5:30 PM)
 ____________________________________________________________
 ____________________________________________________________
-Here are the scheduled tasks on Dec 3 2019:
+Tasks swinging in on Dec 3 2019:
 3.[E][X] holiday (from: Dec 1 2019, 9:00 AM to: Dec 3 2019, 5:30 PM)
 4.[E][ ] meeting (from: Dec 3 2019, 9:00 AM to: Dec 3 2019, 10:00 AM)
 ____________________________________________________________
 ____________________________________________________________
-There are no scheduled tasks on Dec 4 2019.
+No tasks are swinging in on Dec 4 2019.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -502,34 +502,34 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Use 'find <keywords>' (e.g., find read book).
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+My spider-sense found these matches:
 1.[T][X] read book
 2.[D][X] return book (by: Jun 6 2019)
 3.[E][ ] book fair (from: Aug 6 2019 to: Aug 7 2019)
 5.[T][ ] read a book
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+My spider-sense found these matches:
 1.[T][X] read book
 5.[T][ ] read a book
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+My spider-sense found these matches:
 1.[T][X] read book
 5.[T][ ] read a book
 ____________________________________________________________
 ____________________________________________________________
-There are no matching tasks in your list.
+My spider-sense couldn't find a match.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -565,14 +565,14 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
-I'm sorry, but I don't understand that command. Please try again.
+My spider-sense doesn't recognize that command. Please try again.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -612,36 +612,36 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [T][ ] read book
-Now you have 1 tasks in the list.
+You've got 1 task on the web.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
-Now you have 2 tasks in the list.
+You've got 2 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [D][ ] return book (by: Jun 6 2019)
-Now you have 3 tasks in the list.
+You've got 3 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Snip! This task is off the web:
   [E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
-Now you have 2 tasks in the list.
+You've got 2 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 1.[T][ ] read book
 2.[D][ ] return book (by: Jun 6 2019)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -684,8 +684,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Oh dear! Please provide a task number to delete.
@@ -694,9 +694,9 @@ ____________________________________________________________
 Oh dear! There are no tasks to delete.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [T][ ] read book
-Now you have 1 tasks in the list.
+You've got 1 task on the web.
 ____________________________________________________________
 ____________________________________________________________
 Oh dear! Please enter an integer task number to delete.
@@ -708,15 +708,15 @@ ____________________________________________________________
 Oh dear! Task number must be between 1 and 1.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Snip! This task is off the web:
   [T][ ] read book
-Now you have 0 tasks in the list.
+You've got 0 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -758,41 +758,41 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [T][ ] read book
-Now you have 1 tasks in the list.
+You've got 1 task on the web.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Amazing! This task is wrapped up:
   [X] read book
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 1.[T][X] read book
 ____________________________________________________________
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+Back on the web! This task is active again:
   [ ] read book
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Amazing! This task is wrapped up:
   [X] read book
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Snip! This task is off the web:
   [T][X] read book
-Now you have 0 tasks in the list.
+You've got 0 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -830,8 +830,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Please include a description before '/by'.
@@ -843,7 +843,7 @@ ____________________________________________________________
 Please include a start date after '/from'.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -883,35 +883,35 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [T][ ] read book
-Now you have 1 tasks in the list.
+You've got 1 task on the web.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [D][ ] return book (by: Jun 6 2019)
-Now you have 2 tasks in the list.
+You've got 2 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Thwip! This task is on the web:
   [E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
-Now you have 3 tasks in the list.
+You've got 3 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Amazing! This task is wrapped up:
   [X] read book
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Snip! This task is off the web:
   [D][ ] return book (by: Jun 6 2019)
-Now you have 2 tasks in the list.
+You've got 2 tasks on the web.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -950,8 +950,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 Oh dear! The task data file is invalid at line 3. Please fix or remove it before restarting me!
 ____________________________________________________________
@@ -988,8 +988,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 Oh dear! I couldn't read the task data file. Please check that it is accessible.
 ____________________________________________________________
@@ -1029,17 +1029,17 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Oh dear! I couldn't save your tasks. Please check that the data folder is writable.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -1078,8 +1078,8 @@ ____________________________________________________________
 | |_) / _ \ __/ _ \ '__|
 |  __/  __/ ||  __/ |
 |_|   \___|\__\___|_|
-Yo! I'm Peter.
-What crazy adventures are we making today?
+Hey! I'm Peter, your friendly neighborhood task buddy.
+What's on the web today?
 ____________________________________________________________
 ____________________________________________________________
 Oh dear! Task details cannot contain ' | '.
@@ -1091,10 +1091,10 @@ ____________________________________________________________
 Oh dear! Task details cannot contain ' | '.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what's caught in your task web:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Swing by again soon. Your task web will be right here!
 ____________________________________________________________
 ```
 
@@ -1110,8 +1110,8 @@ by the console cases above.
 
 | # | Check | Expected |
 |---|---|---|
-| 1 | Open the window | A window titled "Peter" appears and greets you. No banner or divider lines: those belong to the console. |
-| 2 | Type `list` and press Enter | Your command appears on the right with your picture; the reply appears on the left with Peter's. The input box clears. |
+| 1 | Open the window | A window titled "Peter - Friendly Neighborhood Task Buddy" appears with a red spider-mask application icon. The red-and-blue web background fills the entire conversation viewport immediately, including space below the greeting. No banner or divider lines: those belong to the console. |
+| 2 | Type `list` and press Enter | Your command appears on the right with your picture; the reply appears on the left with Peter's original avatar. The input box clears. |
 | 3 | Click **Send** with text in the box | Behaves exactly as pressing Enter did. |
 | 4 | Press Enter on an empty box | Nothing is added to the transcript. |
 | 5 | Add a task with a very long description, then `list` | The reply wraps onto several lines. No text is cut off at the right edge. |

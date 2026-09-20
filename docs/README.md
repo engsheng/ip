@@ -1,4 +1,4 @@
-# Duke User Guide
+# Peter User Guide
 
 // Update the title above to match the actual product name
 
@@ -42,7 +42,7 @@ Given a list containing `read book`, `return book`, `buy milk` and
 `read a book`, only the two tasks containing both `read` and `book` are shown:
 
 ```
-Here are the matching tasks in your list:
+My spider-sense found these matches:
 1.[T][X] read book
 5.[T][ ] read a book
 ```
@@ -50,7 +50,7 @@ Here are the matching tasks in your list:
 If no task matches every keyword, Peter says so instead:
 
 ```
-There are no matching tasks in your list.
+My spider-sense couldn't find a match.
 ```
 
 ## Feature XYZ

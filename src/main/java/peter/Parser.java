@@ -49,7 +49,7 @@ public final class Parser {
     private static final String MARKER_TO = " /to ";
 
     private static final String MESSAGE_UNKNOWN_COMMAND =
-            "I'm sorry, but I don't understand that command. Please try again.";
+            "My spider-sense doesn't recognize that command. Please try again.";
 
     private Parser() {
     }

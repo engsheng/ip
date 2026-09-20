@@ -68,7 +68,9 @@ public class DialogBox extends HBox {
      * @return dialog box ready to add to the transcript.
      */
     public static DialogBox getUserDialog(String text, Image image) {
-        return new DialogBox(text, image);
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.getStyleClass().addAll("dialog-box", "user-dialog");
+        return dialogBox;
     }
 
     /**
@@ -81,6 +83,7 @@ public class DialogBox extends HBox {
      */
     public static DialogBox getPeterDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.getStyleClass().addAll("dialog-box", "peter-dialog");
         dialogBox.flip();
         return dialogBox;
     }
